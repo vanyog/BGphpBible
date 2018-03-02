@@ -1,0 +1,69 @@
+body { 
+ font-family: "Arial", Sans-Serif; 
+ font-size: 13pt; 
+ background-color:#939393;
+}
+
+h1 {
+ font-size: 15pt; 
+ margin-left:10pt;
+}
+
+p { 
+ margin: 0 10pt 0 25pt; 
+ text-indent:-17pt;
+}
+
+a { text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+.content {
+ background-color:white;
+ padding:5px;
+ min-height:530px;
+}
+
+.p0 {
+ margin: 0 10pt 0 10pt; 
+ text-indent:0pt;
+}
+
+.p {
+ margin: 0 10pt 0 10pt; 
+ text-indent:20pt;
+}
+
+.panel {
+ background-color:#E1E1E1;
+ margin:3px; 
+ padding:4px;
+ font-size: 10pt;
+}
+
+.w { color: #FFFFFF; font-size:small;}
+a.w { color: #00E9FF; font-size:small; text-decoration: none; }
+a:hover.w { color: #FFD9D9; }
+
+.averse { 
+ margin: 0 10pt 0 30pt; 
+ text-indent:-20pt;
+ color:green;
+}
+
+.ln 
+{
+ font-family: arial, helvetica, geneva, tahoma;
+ font-size: 9px;
+ color: white; 
+ text-decoration: none; 
+ background-color:#3359B0; 
+ padding: 2px; 
+ border: 1px solid black; 
+ cursor: pointer; 
+}
+
+.fnotes{ color:red; }
+
+a:hover.prl{  background-color:#939393; color:white; }
+
+.w200 {width:160pt;}
