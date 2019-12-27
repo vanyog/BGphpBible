@@ -1,9 +1,9 @@
 <?php
-$word_bible='Áèáëèÿ';
-$word_chapter='Ãëàâà';
-$word_psalm="Ïñàëì";
-$word_verse="Ñòèõ";
-$missing_files='Ôàéëîâåòå ñ òàçè Áèáëèÿ ëèïñâàò.';
-$prev_verse='Ïðåäèøåí ñòèõ';
-$next_verse='Ñëåäâàù ñòèõ';
+$word_bible='Ð‘Ð¸Ð±Ð»Ð¸Ñ';
+$word_chapter='Ð“Ð»Ð°Ð²Ð°';
+$word_psalm="ÐŸÑÐ°Ð»Ð¼";
+$word_verse="Ð¡Ñ‚Ð¸Ñ…";
+$missing_files='Ð¤Ð°Ð¹Ð»Ð¾Ð²ÐµÑ‚Ðµ Ñ Ñ‚Ð°Ð·Ð¸ Ð‘Ð¸Ð±Ð»Ð¸Ñ Ð»Ð¸Ð¿ÑÐ²Ð°Ñ‚.';
+$prev_verse='ÐŸÑ€ÐµÐ´Ð¸ÑˆÐµÐ½ ÑÑ‚Ð¸Ñ…';
+$next_verse='Ð¡Ð»ÐµÐ´Ð²Ð°Ñ‰ ÑÑ‚Ð¸Ñ…';
 ?>

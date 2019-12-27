@@ -2,8 +2,8 @@
 
 include("functions-$language.php");
 
-$input_data=array(); // масив за входни данни
-check_for_get_data(); // установяване на входните данни, ако са изпратени с GET метод
+$input_data=array(); // РјР°СЃРёРІ Р·Р° РІС…РѕРґРЅРё РґР°РЅРЅРё
+check_for_get_data(); // СѓСЃС‚Р°РЅРѕРІСЏРІР°РЅРµ РЅР° РІС…РѕРґРЅРёС‚Рµ РґР°РЅРЅРё, Р°РєРѕ СЃР° РёР·РїСЂР°С‚РµРЅРё СЃ GET РјРµС‚РѕРґ
 
 function a_path($p){
 if (strpos($_SERVER['SERVER_SOFTWARE'],'(Win32)'))
@@ -17,17 +17,17 @@ global $apth,$pth,$about_version;
  $alk=$apth.'about.html';
  $lk=$pth.'about.html';
  if (file_exists($alk))
-  return '<a href="'.$lk.'">'.$about_version.'</a>';
+  return '<a href="'.$lk.'" id="about_link">'.$about_version.'</a>';
  else
   return '&nbsp;';
 }
 
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
-return '<td class="panel" align="center">'.$word_project.' 
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 1.2.1</a>,</b> 
+return '<td class="panel">'.$word_project.'
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 1.2.2</a>,</b>
  '.$maintained_by.': 
-<b><a href="http://vanyog.com">vanyog.com</a>.
+<b><a href="http://vanyog.com">vanyog.com</a></b>.
 </td>';
 }
 
@@ -49,10 +49,10 @@ global $pth, $bk, $ch, $shv, $word_search,
 $mt=''; $ml='';
 if ($motranslator) {
 $mt='
-<script type="text/javascript" src="mobrowser.js"></script>
-<script type="text/javascript" src="CookieManager.js"></script>
-<script type="text/javascript" src="motranslator.js"></script>
-<script type="text/javascript">
+<script src="mobrowser.js"></script>
+<script src="CookieManager.js"></script>
+<script src="motranslator.js"></script>
+<script>
 cTranslator.sGlobalLangID = cCyrPho.sDName
 cTranslator.registerLang( cOffLang )
 cTranslator.registerLang( cCyrPho )
@@ -85,7 +85,7 @@ else
 { return $v; }
 }
 
-function read_verse($pf,$tf,$vi){
+function read_verse($enc,$pf,$tf,$vi){
 global $findex,$fnotes;
 $vt='';
 $vp=read_vpos($pf,$vi);
@@ -97,11 +97,13 @@ if ($vp!=4294967295){
  if ($p1>-1){
   $p2=strpos($vt,"}");
   $findex++;
-  $fnotes=$fnotes."\n".'<P><SPAN CLASS="fnotes"><SUP>'.$findex.'</SUP></SPAN> '.substr($vt,$p1+1,$p2-$p1-1);
+  $fnotes.="\n".'<P><SPAN CLASS="fnotes"><SUP>'.$findex.'</SUP></SPAN> '.
+           iconv($enc,'utf-8',substr($vt,$p1+1,$p2-$p1-1));
   if ($p1<1) $p1++;
   $vt=substr($vt,0,$p1-1).'<A HREF="#fnotes" CLASS="fnotes"><SUP>'.$findex.'</SUP></A>'.substr($vt,$p2+2);
  }
 }
+$vt = preg_replace('/\|(.*?)\|/', '<i>${1}</i>', $vt);
 return $vt;
 }
 

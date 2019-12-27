@@ -5,24 +5,25 @@ include("functions.php");
 include("search-$language.php");
 
 $wplace=0; $before=4; $after=6;
-$pth=posted('version',$default_version); // директория с версията на Библията
-$bk=posted('book',1);         // номер на книга
-$ch=posted('chapter',1);      // номер на глава
-include("hlanguage.php");     // създаване на клас HLanguage
-$sst=posted('stext','Аава');  // низ от думи за търсене
-$wrd=sptlit_words($sst);      // масив от думи за търсене
-$prt=posted('part',0);        // номер на група резултати
-$shv=posted('showv',1);       // дали да се показват целите стихове
+$pth=posted('version',$default_version); // РґРёСЂРµРєС‚РѕСЂРёСЏ СЃ РІРµСЂСЃРёСЏС‚Р° РЅР° Р‘РёР±Р»РёСЏС‚Р°
+$enc=version_encoding($pth);
+$bk=posted('book',1);         // РЅРѕРјРµСЂ РЅР° РєРЅРёРіР°
+$ch=posted('chapter',1);      // РЅРѕРјРµСЂ РЅР° РіР»Р°РІР°
+include("hlanguage.php");     // СЃСЉР·РґР°РІР°РЅРµ РЅР° РєР»Р°СЃ HLanguage
+$sst=posted('stext','РђР°РІР°');  // РЅРёР· РѕС‚ РґСѓРјРё Р·Р° С‚СЉСЂСЃРµРЅРµ
+$wrd=sptlit_words($sst);      // РјР°СЃРёРІ РѕС‚ РґСѓРјРё Р·Р° С‚СЉСЂСЃРµРЅРµ
+$prt=posted('part',0);        // РЅРѕРјРµСЂ РЅР° РіСЂСѓРїР° СЂРµР·СѓР»С‚Р°С‚Рё
+$shv=posted('showv',1);       // РґР°Р»Рё РґР° СЃРµ РїРѕРєР°Р·РІР°С‚ С†РµР»РёС‚Рµ СЃС‚РёС…РѕРІРµ
 if (!file_exists($pth.'WordPoint.bin'))
-{ die('Файловете с тази Библия липсват.'); }
-$wcount=filesize($pth.'WordPoint.bin')/4; // брой на думите в Библията
-$aprt=500; if ($shv){ $aprt=50; }         // брой стихове, покадвани на 1 страница
+{ die('Р¤Р°Р№Р»РѕРІРµС‚Рµ СЃ С‚Р°Р·Рё Р‘РёР±Р»РёСЏ Р»РёРїСЃРІР°С‚.'); }
+$wcount=filesize($pth.'WordPoint.bin')/4; // Р±СЂРѕР№ РЅР° РґСѓРјРёС‚Рµ РІ Р‘РёР±Р»РёСЏС‚Р°
+$aprt=500; if ($shv){ $aprt=50; }         // Р±СЂРѕР№ СЃС‚РёС…РѕРІРµ, РїРѕРєР°РґРІР°РЅРё РЅР° 1 СЃС‚СЂР°РЅРёС†Р°
 
 include("structure.php");
 
-Start_page(); // показва началото на страницата
+Start_page(); // РїРѕРєР°Р·РІР° РЅР°С‡Р°Р»РѕС‚Рѕ РЅР° СЃС‚СЂР°РЅРёС†Р°С‚Р°
 
-//Отваряне на файловете
+//РћС‚РІР°СЂСЏРЅРµ РЅР° С„Р°Р№Р»РѕРІРµС‚Рµ
 $wpf=fopen($pth.'WordPoint.bin','r');
 $wtf=fopen($pth.'WordList.txt','r');
 if (count($wrd)){
@@ -33,7 +34,7 @@ if (count($wrd)){
   $vtf=fopen($pth.'CompactText.bin','r');
  }
  
- // съставяне на масива $c с индекси на намерените стихове
+ // СЃСЉСЃС‚Р°РІСЏРЅРµ РЅР° РјР°СЃРёРІР° $c СЃ РёРЅРґРµРєСЃРё РЅР° РЅР°РјРµСЂРµРЅРёС‚Рµ СЃС‚РёС…РѕРІРµ
  $c=bwverses($wrd[0]);
  $wlnx=bnwords($wplace);
  for($j=1;$j<count($wrd);$j++){
@@ -42,7 +43,7 @@ if (count($wrd)){
   $c=array_values( array_intersect(array_values($c),$c1) );
  }
  
- //Затваряне на файловете
+ //Р—Р°С‚РІР°СЂСЏРЅРµ РЅР° С„Р°Р№Р»РѕРІРµС‚Рµ
  fclose($cpf);
  fclose($ccf);
 }
@@ -53,47 +54,43 @@ else {
 fclose($wpf);
 fclose($wtf);
 
-// показване на резултата
+// РїРѕРєР°Р·РІР°РЅРµ РЅР° СЂРµР·СѓР»С‚Р°С‚Р°
 if (count($c)){ 
- echo '<td><p><b>'.count($c).'</b> '.$found_in.':<br>&nbsp;</td>
-<td width="30%" valign="top">
-<form name="showv" action="">
-<input type="CHECKBOX" name="chb" onclick="ShowWithV();"';
- if ($shv){ echo ' checked'; }
- echo '> 
-'.$show_verse_text.'
-</form></td>
-</tr><tr><td colspan="2">'; 
+ echo '<form name="showv" action="search.php">
+ <input type="CHECKBOX" name="chb" onclick="ShowWithV();"';
+  if ($shv){ echo ' checked'; }
+  echo '>
+ '.$show_verse_text.'
+ </form>
+ <p><b>'.count($c).'</b> '.$found_in.':<br>&nbsp;
+';
 }
-else { echo "<td colspan=2><P>$not_found"; }
+else { echo "<P>$not_found"; }
 
 echo list_to_text($c);
 
 if ($shv && isset($vpf)){ fclose($vpf); fclose($vtf); }
 
-echo '<p>&nbsp;
-<hr size="1" width="98%">
+echo '<p>&nbsp;</p>
 <p>'.$neighbour_words.':
-<table><tr>'.$wlnx.'</tr></table>
-<hr size="1" width="98%">
-<center>
+'.iconv($enc,'utf-8',$wlnx).'
 '.search_form().'
-</center>
-<p>&nbsp;
+<p>&nbsp;</p>
 
-</td></tr></table>
-
-<table cellspacing="0" width="100%"><tr>'.about_the_project().'</tr></table>
+<div class="bottom">
+'.about_the_project().'
+</div>
+</div>
 
 </BODY>
-</HTML>
+</html>
 ';
 
-//---------функции----------
+//---------С„СѓРЅРєС†РёРё----------
 
-function bnwords($i){ // връща няколко думи около последната потърсена дума
+function bnwords($i){ // РІСЂСЉС‰Р° РЅСЏРєРѕР»РєРѕ РґСѓРјРё РѕРєРѕР»Рѕ РїРѕСЃР»РµРґРЅР°С‚Р° РїРѕС‚СЉСЂСЃРµРЅР° РґСѓРјР°
 global $wcount,$wplace,$before,$after;
-$r='<td><p>';
+$r='<p>';
 $ba=$before+$after;
 $i2=$i + $after; 
 if ($i2<$ba){ $i2=$ba; }
@@ -105,12 +102,12 @@ for($j=$i1;$j<$i2+1;$j++){
  if ($j==$wplace){ $n='<b>'.$n.'</b>'; }
  $r=$r."\n<br>$n";
 }
-return $r.'</td>
+return $r.'
 ';
 }
 
-function list_to_text($c){ // обръща в стринг за показване масива стихове $c
-global $vcount, $bnames, $prt, $aprt, $shv, $more_results;
+function list_to_text($c){ // РѕР±СЂСЉС‰Р° РІ СЃС‚СЂРёРЅРі Р·Р° РїРѕРєР°Р·РІР°РЅРµ РјР°СЃРёРІР° СЃС‚РёС…РѕРІРµ $c
+global $enc, $vcount, $bnames, $prt, $aprt, $shv, $more_results;
 $r=''; $i=$prt*$aprt; $iend=$i+$aprt; $cc=count($c);
 if ($iend>$cc){ $iend=$cc; }
 $bk1=1; $ch1=0; $vr=1; $gi=0; $g=0; $b0=''; $b='';
@@ -130,10 +127,10 @@ while ($i<$iend){
  $b0=$b;
  $b =rtrim($bnames[count($vcount)+$bk1]);
  $b1=rtrim($bnames[2*count($vcount)+$bk1]);
- if ($b!=$b0){ $r=$r."\n<p><b>$b</b>:"; }
- $r=$r."\n".' <a href="" onclick="OpenVerse('.
+ if ($b!=$b0){ $r=$r."\n<p><b>".iconv($enc,'utf-8',$b)."</b>:"; }
+ $r=$r."\n".' <a href="#" onclick="OpenVerse('.
     "$bk1,$ch1,$vr".');return false;">'."$ch1:$vr".'</a>';
- if ($shv){ $r=$r.' '.bverse($c[$i]).'<br>'; }
+ if ($shv){ $r=$r.' '.iconv($enc,'utf-8',bverse($c[$i])).'<br>'; }
  else { $r=$r.', '; }
  $i++; $ch1--;
  $gi=$g;
@@ -142,14 +139,14 @@ if ($cc>$aprt){
  $i=1; $r=$r."\n<p>&nbsp;\n<br>$more_results: ";
  while (($i-1)*$aprt<=$cc){
   if ($i==($prt+1)){ $r=$r." <font size=+1><b>$i</b></font>&nbsp;"; }
-  else { $r=$r.' <a href="" onclick="SearchPart('.($i-1).');return false;">'."$i</a>&nbsp;"; }
+  else { $r=$r.' <a href="#" onclick="SearchPart('.($i-1).');return false;">'."$i</a>&nbsp;"; }
   $i++; 
  }
 }
 return $r;
 }
 
-function bverse($i){ // връща текста на $i-ия стих
+function bverse($i){ // РІСЂСЉС‰Р° С‚РµРєСЃС‚Р° РЅР° $i-РёСЏ СЃС‚РёС…
 global $vpf,$vtf;
 $p=fread4($vpf,($i-1)*4);
 $l=fread2($vtf,$p);
@@ -157,7 +154,7 @@ $t=fread($vtf,$l);
 return decode($t);
 }
 
-function bwverses($w){ // връща номерата на стиховете, в които се среща думата $w
+function bwverses($w){ // РІСЂСЉС‰Р° РЅРѕРјРµСЂР°С‚Р° РЅР° СЃС‚РёС…РѕРІРµС‚Рµ, РІ РєРѕРёС‚Рѕ СЃРµ СЃСЂРµС‰Р° РґСѓРјР°С‚Р° $w
 global $cpf,$ccf,$wplace;
 $r=array();
 $wplace=bwindex($w);
@@ -173,7 +170,7 @@ if ($w==bword($wplace,true)){
 return $r;
 }
 
-function bwindex($w0){ // връща номера който би имала думата $w0
+function bwindex($w0){ // РІСЂСЉС‰Р° РЅРѕРјРµСЂР° РєРѕР№С‚Рѕ Р±Рё РёРјР°Р»Р° РґСѓРјР°С‚Р° $w0
 global $wcount,$hlang;
 $i1=0; $i2=$wcount-1;
 do {
@@ -190,17 +187,18 @@ else {
 }
 }
 
-function bword($i,$l){ // връща $i-тата дума, ако $l изписана с малки букви
+function bword($i,$l){ // РІСЂСЉС‰Р° $i-С‚Р°С‚Р° РґСѓРјР°, Р°РєРѕ $l РёР·РїРёСЃР°РЅР° СЃ РјР°Р»РєРё Р±СѓРєРІРё
 global $wpf,$wtf;
 $wp=fread4($wpf,$i*4);
 fseek($wtf,$wp);
-$w=split("\r",fread($wtf,64));
+$w=explode("\r",fread($wtf,64));
 if ($l){ return lc_word($w[0]); }
 else { return $w[0]; }
 }
 
-function sptlit_words($st){ // връща масив от думите в $st, изписани само с малки букви
-global $hlang;
+function sptlit_words($st){ // РІСЂСЉС‰Р° РјР°СЃРёРІ РѕС‚ РґСѓРјРёС‚Рµ РІ $st, РёР·РїРёСЃР°РЅРё СЃР°РјРѕ СЃ РјР°Р»РєРё Р±СѓРєРІРё
+global $hlang,$enc;
+$st=iconv('utf-8',$enc,$st);
 $r=array(); $w='';
 for($i=0;$i<strlen($st);$i++){
  $l=$hlang->lc_letter($st[$i]);
@@ -214,7 +212,7 @@ if ($w){ $r[]=$w; }
 return $r;
 }
 
-function lc_word($t){ // променя всички букви на $t на малки
+function lc_word($t){ // РїСЂРѕРјРµРЅСЏ РІСЃРёС‡РєРё Р±СѓРєРІРё РЅР° $t РЅР° РјР°Р»РєРё
 global $hlang;
 for($i=0;$i<strlen($t);$i++){
  $l=$hlang->lc_letter($t[$i]);
@@ -223,13 +221,13 @@ for($i=0;$i<strlen($t);$i++){
 return $t;
 }
 
-function fread2($f,$p){ // чете двубайтово цяло число от позиция $p на файл $f
+function fread2($f,$p){ // С‡РµС‚Рµ РґРІСѓР±Р°Р№С‚РѕРІРѕ С†СЏР»Рѕ С‡РёСЃР»Рѕ РѕС‚ РїРѕР·РёС†РёСЏ $p РЅР° С„Р°Р№Р» $f
 fseek($f,$p);
 $r=fread($f,2);
 return ord($r[0])+256*ord($r[1]);
 }
 
-function fread4($f,$p){ // чете четирибайтово цяло число от позиция $p на файл $f
+function fread4($f,$p){ // С‡РµС‚Рµ С‡РµС‚РёСЂРёР±Р°Р№С‚РѕРІРѕ С†СЏР»Рѕ С‡РёСЃР»Рѕ РѕС‚ РїРѕР·РёС†РёСЏ $p РЅР° С„Р°Р№Р» $f
 fseek($f,$p);
 $r=fread($f,4);
 return ord($r[0])+256*ord($r[1])+256*256*ord($r[2])+256*256*256*ord($r[3]);
@@ -237,15 +235,16 @@ return ord($r[0])+256*ord($r[1])+256*256*ord($r[2])+256*256*256*ord($r[3]);
 
 
 function Start_page(){
-global $pth,$bk,$ch,$sst,$search_result_for,$word_bible;
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<HTML>
+global $pth,$enc,$bk,$ch,$sst,$search_result_for,$word_bible;
+echo '<!DOCTYPE html>
+<html lang="bg">
 
 <HEAD>
-  <TITLE>Библията на български - php реализация</TITLE>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+  <TITLE>Р‘РёР±Р»РёСЏС‚Р° РЅР° Р±СЉР»РіР°СЂСЃРєРё - php СЂРµР°Р»РёР·Р°С†РёСЏ</TITLE>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
   <link rel=stylesheet type="text/CSS" href="php-bible.css">
-<script language="JavaScript" type="text/javascript">
+<script>
 
 function OpenVerse(b,c,v){
  if (v>1) document.f1.action="index.php#"+v;
@@ -285,15 +284,10 @@ function ShowWithV(){
 <input type="HIDDEN" name="verse" value="">
 </form>
 
-<table width="100%" cellspacing="0" bgcolor="#FFFFFF" border="0">
-<tr><td>
+<div id="all_page">
 <p>'.$search_result_for.': "<b>'.$sst.'</b>":
 <p>&nbsp;<br>
-</td>
-<td ALIGN="right" VALIGN="top">
 <A HREF="" onclick="javascript:document.f1.submit();return false;"><B>'.$word_bible.'</B></A>&nbsp;&nbsp;
-</td></tr>
-<tr>
 ';
 }
 

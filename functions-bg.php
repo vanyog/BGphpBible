@@ -1,10 +1,10 @@
 <?php
-$about_version="Çà ïðåâîäà";
-$word_project="Ïðîåêò";
-$maintained_by="ïîääúðæàí îò";
-$and_hosted_at="è õîñòâàí íà";
-$word_search="Òúðñåíå";
-$motrans_help_tip='Çà òåçè áóòîíè';
-$motrans_help='ÏÎÌÎÙ';
-$motrans_lang_tip='Êëàâèàòóðà';
+$about_version="Ð—Ð° Ð¿Ñ€ÐµÐ²Ð¾Ð´Ð°";
+$word_project="ÐŸÑ€Ð¾ÐµÐºÑ‚";
+$maintained_by="Ð¿Ð¾Ð´Ð´ÑŠÑ€Ð¶Ð°Ð½ Ð¾Ñ‚";
+$and_hosted_at="Ð¸ Ñ…Ð¾ÑÑ‚Ð²Ð°Ð½ Ð½Ð°";
+$word_search="Ð¢ÑŠÑ€ÑÐµÐ½Ðµ";
+$motrans_help_tip='Ð—Ð° Ñ‚ÐµÐ·Ð¸ Ð±ÑƒÑ‚Ð¾Ð½Ð¸';
+$motrans_help='ÐŸÐžÐœÐžÐ©';
+$motrans_lang_tip='ÐšÐ»Ð°Ð²Ð¸Ð°Ñ‚ÑƒÑ€Ð°';
 ?>

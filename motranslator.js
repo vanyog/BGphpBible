@@ -24,7 +24,7 @@ var cCyrPho =
 	sName : 'Bulgarian Cyrillc Phonetic',
 	sDName : 'PHO', //display name
 	sMap : 'aAbBwWgGdDeEvVzZiIjJkKlLmMnNoOpPrRsStTuUfFhHcC`~[{]}yYxX\\|qQ',
-	sRData : 'àÀáÁâÂãÃäÄåÅæÆçÇèÈéÉêÊëËìÌíÍîÎïÏðÐñÑòÒóÓôÔõÕöÖ÷×øØùÙúÚüÜþÞÿß'
+	sRData : 'Ð°ÐÐ±Ð‘Ð²Ð’Ð³Ð“Ð´Ð”ÐµÐ•Ð¶Ð–Ð·Ð—Ð¸Ð˜Ð¹Ð™ÐºÐšÐ»Ð›Ð¼ÐœÐ½ÐÐ¾ÐžÐ¿ÐŸÑ€Ð ÑÐ¡Ñ‚Ð¢ÑƒÐ£Ñ„Ð¤Ñ…Ð¥Ñ†Ð¦Ñ‡Ð§ÑˆÐ¨Ñ‰Ð©ÑŠÐªÑŒÐ¬ÑŽÐ®ÑÐ¯'
 }
 
 var cCyrBds =
@@ -32,7 +32,7 @@ var cCyrBds =
 	sName : 'Bulgarian Cyrillc',
 	sDName : 'BDS', //display name
 	sMap : 'dD/?lLhHoOeEgGpPrRxXuU.>;:kKfFmM,<iIjJwWbBnN[{\'"tTyYcCaAzZsSvVqQ]}',
-	sRData : 'àÀáÁâÂãÃäÄåÅæÆçÇèÈéÉêÊëËìÌíÍîÎïÏðÐñÑòÒóÓôÔõÕöÖ÷×øØùÙúÚüÜþÞÿßýÝûÛ;§'
+	sRData : 'Ð°ÐÐ±Ð‘Ð²Ð’Ð³Ð“Ð´Ð”ÐµÐ•Ð¶Ð–Ð·Ð—Ð¸Ð˜Ð¹Ð™ÐºÐšÐ»Ð›Ð¼ÐœÐ½ÐÐ¾ÐžÐ¿ÐŸÑ€Ð ÑÐ¡Ñ‚Ð¢ÑƒÐ£Ñ„Ð¤Ñ…Ð¥Ñ†Ð¦Ñ‡Ð§ÑˆÐ¨Ñ‰Ð©ÑŠÐªÑŒÐ¬ÑŽÐ®ÑÐ¯ÑÐ­Ñ‹Ð«;Â§'
 }
 
 
@@ -65,7 +65,7 @@ cTranslator.switchLang = function( sLang )
 	{
 		this.hCurrentLang = this.aLanguages[ sLang ]
 	}
-	if( this.onSwitchLang != null )
+    if( this.onSwitchLang !== null )
 	{
 		this.onSwitchLang( sLang )
 	}
@@ -84,7 +84,7 @@ cTranslator.getNextLang = function( sCL )
 		{
 			return sKey
 		}
-		if( sCL == sKey )
+        if( sCL === sKey )
 		{
 			bFound = true
 		}
@@ -98,7 +98,7 @@ cTranslator.getNextLang = function( sCL )
 cTranslator.toggleLang = function( hElement )
 {
 	var sNewLangID = ''
-	if( typeof hElement == 'undefined' || hElement == null )
+    if( typeof hElement === 'undefined' || hElement === null )
 	{
 		sNewLangID = this.getNextLang( this.sGlobalLangID )
 		this.sGlobalLangID = sNewLangID
@@ -106,7 +106,7 @@ cTranslator.toggleLang = function( hElement )
 	else
 	{
 		var sLangAtt = hElement.getAttribute( 'MOLANG' )
-		if( sLangAtt != 'DEFAULT' )
+        if( sLangAtt !== 'DEFAULT' )
 		{
 			sNewLangID = this.getNextLang( sLangAtt )
 			hElement.setAttribute( 'MOLANG', sNewLangID )
@@ -123,11 +123,11 @@ cTranslator.toggleLang = function( hElement )
 
 cTranslator.initLanguage = function( hEvent )
 {
- 	if( hEvent == null ) hEvent = window.event
+    if( hEvent === null ) hEvent = window.event
 	hElement = ( hEvent.srcElement ) ? hEvent.srcElement : hEvent.originalTarget 
 	cTranslator.hCurrentInput = hElement
 	var sLangAtt = hElement.getAttribute( 'MOLANG' )
-	if( sLangAtt != 'DEFAULT' )
+    if( sLangAtt !== 'DEFAULT' )
 	{
 		cTranslator.switchLang( hElement.getAttribute( 'MOLANG' ) )
 	}
@@ -144,10 +144,10 @@ cTranslator.processKey = function( hEvent )
 	{
 		return true;
 	}
-	if( hEvent == null ) hEvent = window.event
+    if( hEvent === null ) hEvent = window.event
 	hElement = ( hEvent.srcElement ) ? hEvent.srcElement : hEvent.originalTarget 
-	var nCode = hEvent.keyCode ? hEvent.keyCode : hEvent.charCode ? hEvent.charCode : hEvent.which ? hEvent.which : void 0;
-	if( ( hEvent.charCode != null ) && ( hEvent.charCode != nCode ) )
+    var nCode = hEvent.keyCode ? hEvent.keyCode : hEvent.charCode ? hEvent.charCode : hEvent.which ? hEvent.which : 0;
+    if( ( hEvent.charCode !== null ) && ( hEvent.charCode !== nCode ) )
 	{
 		return
 	}
@@ -175,11 +175,11 @@ cTranslator.processKey = function( hEvent )
 				var nScrollWidth = hElement.scrollWidth
 				cTranslator.replaceSelection( hElement, sRep )
 				var nW = hElement.scrollWidth - nScrollWidth
-				if( hElement.scrollTop == 0 )
+                if( hElement.scrollTop === 0 )
 				{
 					hElement.scrollTop = nScrollTop
 				}
-				if( hElement.scrollLeft == 0 )
+                if( hElement.scrollLeft === 0 )
 				{
 					hElement.scrollLeft =  nScrollLeft + nW
 				}
@@ -212,24 +212,24 @@ cTranslator.init = function()
 {
 	var nI = 0
 	var aInputs = document.getElementsByTagName( 'INPUT' )
-	for( var nI = 0; nI < aInputs.length; nI ++ )
+    for( var I = 0; I < aInputs.length; I ++ )
 	{
-		if( aInputs[ nI ].type.toLowerCase() == 'text' )
+        if( aInputs[ I ].type.toLowerCase() === 'text' )
 		{
-		 	var sLangAtt = aInputs[ nI ].getAttribute( 'MOLANG' )
+            var sLangAtt = aInputs[ I ].getAttribute( 'MOLANG' )
 			if( sLangAtt )
 			{
-				cTranslator.install( aInputs[ nI ] )
+                cTranslator.install( aInputs[ I ] )
 			}
 		}
 	}
 	var aTextAreas = document.getElementsByTagName( 'TEXTAREA' )
-	for( var nI = 0; nI < aTextAreas.length; nI ++ )
+    for( var J = 0; J < aTextAreas.length; J ++ )
 	{
-	 	var sLangAtt = aTextAreas[ nI ].getAttribute( 'MOLANG' )
-		if( sLangAtt )
+        var sLang_Att = aTextAreas[ J ].getAttribute( 'MOLANG' )
+        if( sLang_Att )
 		{
-			cTranslator.install( aTextAreas[ nI ] )
+            cTranslator.install( aTextAreas[ J ] )
 		}
 	}
 	
@@ -237,7 +237,7 @@ cTranslator.init = function()
 	{
 		var sLang = CookieManager.getCookie( 'molang' )
 	}
-	if( sLang != null )
+    if( sLang !== null )
 	{
 		this.sGlobalLangID = sLang
 		//this.switchLang( sLang )
@@ -285,8 +285,8 @@ cTranslator.onKeySwitch = function( hEvent )
 {
    if( cTranslator.bUseKeySwitch )
    {
-	   if( hEvent == null ) hEvent = window.event
-	   var nCode = hEvent.keyCode ? hEvent.keyCode : hEvent.charCode ? hEvent.charCode : hEvent.which ? hEvent.which : void 0;
+       if( hEvent === null ) hEvent = window.event
+       var nCode = hEvent.keyCode ? hEvent.keyCode : hEvent.charCode ? hEvent.charCode : hEvent.which ? hEvent.which : 0;
 	   if( hEvent.shiftKey && hEvent.ctrlKey )
 	   {
 		   cTranslator.hKeySwitchTimeout = setTimeout( function() { cTranslator.doKeySwitch() }, 200 )
@@ -300,9 +300,9 @@ cTranslator.onKeySwitch = function( hEvent )
 
 cTranslator.onKeyUp = function( hEvent )
 {
-	if( hEvent == null ) hEvent = window.event
+    if( hEvent === null ) hEvent = window.event
 	var nCode = hEvent.keyCode ? hEvent.keyCode : hEvent.charCode ? hEvent.charCode : hEvent.which ? hEvent.which : void 0;
-	if( nCode == 0 )
+    if( nCode === 0 )
 	{
 		clearTimeout( cTranslator.hKeySwitchTimeout )
 	}
@@ -325,12 +325,12 @@ cTranslator.onLoad = function()
 		  	cTranslator.init()
 
 			var hLink = document.getElementById( 'langLink' )
-			if( hLink != null )
+            if( hLink !== null )
 			{
 				hLink.onclick = function() { cTranslator.toggleLang( cTranslator.hCurrentInput ); return false }
 				
 				var hHelpLink = document.getElementById( 'langHelpLink' )
-				if( hHelpLink != null )
+                if( hHelpLink !== null )
 				{
 					hHelpLink.href = "http://momche.net/redir.php?page=inputlocalehelp"
 				}
@@ -354,7 +354,7 @@ cTranslator.onLoad = function()
 cTranslator.displayLanguage = function( sLang )
 {
 	var hLink = document.getElementById( 'langLink' )
-	if( hLink != null )
+    if( hLink !== null )
 	{
 		hLink.innerHTML = sLang
 	}

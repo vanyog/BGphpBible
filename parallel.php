@@ -24,45 +24,45 @@ include("parallel-$language.php");
 
 //print_r($_POST);
 
-$vpth=array_keys($version);   // масив с директориите на библиите
-$pth=posted('version',$default_version); // Директорията с файловете на Библията
+$vpth=array_keys($version);   // РјР°СЃРёРІ СЃ РґРёСЂРµРєС‚РѕСЂРёРёС‚Рµ РЅР° Р±РёР±Р»РёРёС‚Рµ
+$pth=posted('version',$default_version); // Р”РёСЂРµРєС‚РѕСЂРёСЏС‚Р° СЃ С„Р°Р№Р»РѕРІРµС‚Рµ РЅР° Р‘РёР±Р»РёСЏС‚Р°
 include("hlanguage.php");
-$bk=posted('book',1);    // Номер на текущата книга
-$ch=posted('chapter',1); // Номер на текущата глава
-$vr=posted('verse',1);   // Номер на текущия стих
-$gch=$ch; $gvr=$vr;      // "Глобални" номера на текущите глава и стих
-include("structure.php");// Зарежда описанието на структурата на Библията
-if ($pth!='/') globalize();// Пресмятане на "глобалните" глава и стих
+$bk=posted('book',1);    // РќРѕРјРµСЂ РЅР° С‚РµРєСѓС‰Р°С‚Р° РєРЅРёРіР°
+$ch=posted('chapter',1); // РќРѕРјРµСЂ РЅР° С‚РµРєСѓС‰Р°С‚Р° РіР»Р°РІР°
+$vr=posted('verse',1);   // РќРѕРјРµСЂ РЅР° С‚РµРєСѓС‰РёСЏ СЃС‚РёС…
+$gch=$ch; $gvr=$vr;      // "Р“Р»РѕР±Р°Р»РЅРё" РЅРѕРјРµСЂР° РЅР° С‚РµРєСѓС‰РёС‚Рµ РіР»Р°РІР° Рё СЃС‚РёС…
+include("structure.php");// Р—Р°СЂРµР¶РґР° РѕРїРёСЃР°РЅРёРµС‚Рѕ РЅР° СЃС‚СЂСѓРєС‚СѓСЂР°С‚Р° РЅР° Р‘РёР±Р»РёСЏС‚Р°
+if ($pth!='/') globalize();// РџСЂРµСЃРјСЏС‚Р°РЅРµ РЅР° "РіР»РѕР±Р°Р»РЅРёС‚Рµ" РіР»Р°РІР° Рё СЃС‚РёС…
 $next_bk=$bk;
 $prev_bk=$bk;
 $next_ch=$ch;
 $prev_ch=$ch;
 $next_vr=$vr;
 $prev_vr=$vr;
-next_prev(); // определя номера на предишния и на следващия стих 
-$fnotes=''; // бележки под линия
-$findex=0;  // Номер на бележката под линия
+next_prev(); // РѕРїСЂРµРґРµР»СЏ РЅРѕРјРµСЂР° РЅР° РїСЂРµРґРёС€РЅРёСЏ Рё РЅР° СЃР»РµРґРІР°С‰РёСЏ СЃС‚РёС… 
+$fnotes=''; // Р±РµР»РµР¶РєРё РїРѕРґ Р»РёРЅРёСЏ
+$findex=0;  // РќРѕРјРµСЂ РЅР° Р±РµР»РµР¶РєР°С‚Р° РїРѕРґ Р»РёРЅРёСЏ
 
-start_page(); // начало на страницата
+start_page(); // РЅР°С‡Р°Р»Рѕ РЅР° СЃС‚СЂР°РЅРёС†Р°С‚Р°
 
-// Показване на стиха от различните преводи
+// РџРѕРєР°Р·РІР°РЅРµ РЅР° СЃС‚РёС…Р° РѕС‚ СЂР°Р·Р»РёС‡РЅРёС‚Рµ РїСЂРµРІРѕРґРё
 foreach($vpth as $p) if (!in_array($p,array_keys($on_other_sites))) parallel($p);
 
-// Показване на бележките под линия
+// РџРѕРєР°Р·РІР°РЅРµ РЅР° Р±РµР»РµР¶РєРёС‚Рµ РїРѕРґ Р»РёРЅРёСЏ
 if ($fnotes) 
 echo "\n".'<P>&nbsp;
-<HR SIZE="1" ALIGN="left" WIDTH="30%">
+<HR SIZE="1">
 <A NAME="fnotes"></A>'.$fnotes;
 
 echo '</DIV>
-<table width="100%" cellspacing="0"><tr>
+<div class="bottom">
 '.pbutton().
 about_the_project().
 nbutton().
 '
-</tr></table>';
+</div>';
 
-// --------- Функции ----------
+// --------- Р¤СѓРЅРєС†РёРё ----------
 
 function globalize(){
 global $bn,$pth,$bk,$ch,$vr,$gch,$gvr;
@@ -81,8 +81,9 @@ if (file_exists($dfn)){
 
 function parallel($p){
 global $pth,$bn,$bk,$version,$gch,$gvr,$hlang;
-// преминаване към "локални" номера на глава $ch и стих $vr
+// РїСЂРµРјРёРЅР°РІР°РЅРµ РєСЉРј "Р»РѕРєР°Р»РЅРё" РЅРѕРјРµСЂР° РЅР° РіР»Р°РІР° $ch Рё СЃС‚РёС… $vr
 $apth=a_path($p);
+$enc=version_encoding($apth);
 $dfn=$apth.'_Diff_.txt';
 $ch=$gch; $vr=$gvr;
 if (file_exists($dfn)){
@@ -94,22 +95,22 @@ if (file_exists($dfn)){
   }
  }
 }
-// определяне "локалния" номер на книгата $bk1
+// РѕРїСЂРµРґРµР»СЏРЅРµ "Р»РѕРєР°Р»РЅРёСЏ" РЅРѕРјРµСЂ РЅР° РєРЅРёРіР°С‚Р° $bk1
 $bn0=file($p."BibleTitles.txt");
 $bn1=explode(' ',trim($bn0[0]));
 if ($pth!='/') $bk1=array_search( $bn[$bk],array_slice($bn1,1) ) + 1;
 else $bk1=array_search( $bk,array_slice($bn1,1) ) + 1;
-if (($bk1==1)&&($bk!=1)) // ако няма такава книга
+if (($bk1==1)&&($bk!=1)) // Р°РєРѕ РЅСЏРјР° С‚Р°РєР°РІР° РєРЅРёРіР°
 { $vt=''; $bn3=''; $bk1=1; $vr=''; }
 else {
- // определяне индакса на стиха
+ // РѕРїСЂРµРґРµР»СЏРЅРµ РёРЅРґР°РєСЃР° РЅР° СЃС‚РёС…Р°
  $vi=vindex($bk1,$ch,get_structure($bn0,$p))+$vr-1;
- // четене на стиха $vt;
+ // С‡РµС‚РµРЅРµ РЅР° СЃС‚РёС…Р° $vt;
  $pf=fopen($p.'CompactPoint.bin','r');
  $tf=fopen($p.'CompactText.bin','r');
  $hlang->HLanguage(version_languege($p));
- $vt=read_verse($pf,$tf,$vi);
- $bn3=' - '.$bn0[2*$bn1[0]+$bk1]." $ch:$vr";
+ $vt=iconv($enc,'utf-8',read_verse($enc,$pf,$tf,$vi));
+ $bn3=' - '.iconv($enc,'utf-8',$bn0[2*$bn1[0]+$bk1])." $ch:$vr";
 }
 echo "\n".'<P><B><A HREF="" ONCLICK="BkToBible('
      ."'$p',$bk1,$ch,'$vr'".');return false;">'.$version[$p]."$bn3</B></A>
@@ -119,15 +120,16 @@ echo "\n".'<P><B><A HREF="" ONCLICK="BkToBible('
 
 function start_page(){
 global $next_bk, $prev_bk, $next_ch, $prev_ch, $next_vr, $prev_vr;
-header("Content-Type: text/html; charset=windows-1251");
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<HTML>
+header("Content-Type: text/html; charset=utf-8");
+echo '<!DOCTYPE html>
+<html lang="bg">
 
 <HEAD>
-  <TITLE>Библията на български - php реализация</TITLE>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+  <TITLE>Р‘РёР±Р»РёСЏС‚Р° РЅР° Р±СЉР»РіР°СЂСЃРєРё - php СЂРµР°Р»РёР·Р°С†РёСЏ</TITLE>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
   <link rel=stylesheet type="text/CSS" href="php-bible.css">
-<SCRIPT TYPE="text/javascript">
+<script>
 function BkToBible(p,b,c,v){
 if (v>1) document.forms.b_open.action="index.php#"+v;
 document.forms.b_open.version.value=p;
@@ -150,7 +152,7 @@ document.forms.b_parallel.chapter.value="'.$prev_ch.'";
 document.forms.b_parallel.verse.value="'.$prev_vr.'";
 document.forms.b_parallel.submit();
 }
-</SCRIPT>
+</script>
 </HEAD>
 
 <BODY>
@@ -160,35 +162,29 @@ document.forms.b_parallel.submit();
 <INPUT TYPE="HIDDEN" NAME="chapter" VALUE="">
 <INPUT TYPE="HIDDEN" NAME="verse" VALUE="">
 </FORM>
-'.parallel_form().'
-'.tbuttons().
-'
+<div class="bottom">
+'.parallel_form().tbuttons().'
+</div>
 <DIV CLASS="content">
-<H1>Библейски паралел (сравнение на преводите)</H1>
+<H1>Р‘РёР±Р»РµР№СЃРєРё РїР°СЂР°Р»РµР» (СЃСЂР°РІРЅРµРЅРёРµ РЅР° РїСЂРµРІРѕРґРёС‚Рµ)</H1>
 ';
 }
 
 function tbuttons(){
 global $prev_verse,$next_verse;
-return '<table width="100%" cellspacing="0"><tr>
-'.pbutton().'
-'.nbutton().'
-</tr></table>';
+return pbutton().'
+'.nbutton();
 }
 
 
 function pbutton(){
 global $prev_verse;
-return '<td class="panel">
-<input type="BUTTON" value="'.$prev_verse.'" ONCLICK="PrevVerse()">
-</td>';
+return '<input type="BUTTON" value="'.$prev_verse.'" ONCLICK="PrevVerse()">';
 }
 
 function nbutton(){
 global $next_verse;
-return '<td class="panel" align="right">
-<input type="BUTTON" value="'.$next_verse.'" ONCLICK="NextVerse()">
-</td>';
+return '<input type="BUTTON" value="'.$next_verse.'" class="right" ONCLICK="NextVerse()">';
 }
 
 function next_prev(){
@@ -216,4 +212,4 @@ else {
 ?>
 
 </BODY>
-</HTML>
+</html>

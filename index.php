@@ -22,154 +22,133 @@ include("_options.php");
 include("index-$language.php");
 include("functions.php");
 
-$pt0=posted('cversion','');   // Директория на предишната показвана Библия
-$pth=posted('version',$default_version); // Директорията с файловете на показваната Библия
-include("hlanguage.php");     // Зарежда обекта със зависещи от езика функции
-$bk=posted('book',1);         // Номер на текущата книга
-$ch=posted('chapter',1);      // Номер на текущата глава
-$vr=posted('verse',0);        // Номер на текущия стих
+$pt0=posted('cversion','');   // Р”РёСЂРµРєС‚РѕСЂРёСЏ РЅР° РїСЂРµРґРёС€РЅР°С‚Р° РїРѕРєР°Р·РІР°РЅР° Р‘РёР±Р»РёСЏ
+$pth=posted('version',$default_version); // Р”РёСЂРµРєС‚РѕСЂРёСЏС‚Р° СЃ С„Р°Р№Р»РѕРІРµС‚Рµ РЅР° РїРѕРєР°Р·РІР°РЅР°С‚Р° Р‘РёР±Р»РёСЏ
+$enc=version_encoding($pth);
+include("hlanguage.php");     // Р—Р°СЂРµР¶РґР° РѕР±РµРєС‚Р° СЃСЉСЃ Р·Р°РІРёСЃРµС‰Рё РѕС‚ РµР·РёРєР° С„СѓРЅРєС†РёРё
+$bk=posted('book',1);         // РќРѕРјРµСЂ РЅР° С‚РµРєСѓС‰Р°С‚Р° РєРЅРёРіР°
+$ch=posted('chapter',1);      // РќРѕРјРµСЂ РЅР° С‚РµРєСѓС‰Р°С‚Р° РіР»Р°РІР°
+$vr=posted('verse',0);        // РќРѕРјРµСЂ РЅР° С‚РµРєСѓС‰РёСЏ СЃС‚РёС…
 
-$apth=a_path($pth);           // Абсолютната директория с файловете на Библията
-include("structure.php");     // Зарежда описанието на структурата на Библията
-$shv=1; // Да се показват цели стихове в резултата от търсенето
-$fnotes=''; // Бележки под линия
-$findex=0;  // Номер на бележката под линия
+$apth=a_path($pth);           // РђР±СЃРѕР»СЋС‚РЅР°С‚Р° РґРёСЂРµРєС‚РѕСЂРёСЏ СЃ С„Р°Р№Р»РѕРІРµС‚Рµ РЅР° Р‘РёР±Р»РёСЏС‚Р°
+include("structure.php");     // Р—Р°СЂРµР¶РґР° РѕРїРёСЃР°РЅРёРµС‚Рѕ РЅР° СЃС‚СЂСѓРєС‚СѓСЂР°С‚Р° РЅР° Р‘РёР±Р»РёСЏС‚Р°
+$shv=1; // Р”Р° СЃРµ РїРѕРєР°Р·РІР°С‚ С†РµР»Рё СЃС‚РёС…РѕРІРµ РІ СЂРµР·СѓР»С‚Р°С‚Р° РѕС‚ С‚СЉСЂСЃРµРЅРµС‚Рѕ
+$fnotes=''; // Р‘РµР»РµР¶РєРё РїРѕРґ Р»РёРЅРёСЏ
+$findex=0;  // РќРѕРјРµСЂ РЅР° Р±РµР»РµР¶РєР°С‚Р° РїРѕРґ Р»РёРЅРёСЏ
 
-// Ако се сменя версията, се коригират номерата на стиховете, за да си съответстват по смисъл
+// РђРєРѕ СЃРµ СЃРјРµРЅСЏ РІРµСЂСЃРёСЏС‚Р°, СЃРµ РєРѕСЂРёРіРёСЂР°С‚ РЅРѕРјРµСЂР°С‚Р° РЅР° СЃС‚РёС…РѕРІРµС‚Рµ, Р·Р° РґР° СЃРё СЃСЉРѕС‚РІРµС‚СЃС‚РІР°С‚ РїРѕ СЃРјРёСЃСЉР»
 if ( ($pth!=$pt0) && in_array($pt0,array_keys($version)) 
      && !in_array($pt0,array_keys($on_other_sites)) 
     ) 
   include("correct.php");
 
-//в случай че данните са изпратени опростено с QUERY_STRING
+//РІ СЃР»СѓС‡Р°Р№ С‡Рµ РґР°РЅРЅРёС‚Рµ СЃР° РёР·РїСЂР°С‚РµРЅРё РѕРїСЂРѕСЃС‚РµРЅРѕ СЃ QUERY_STRING
 if (isset($_SERVER['QUERY_STRING'])) get_query();
 
-header("Content-Type: text/html; charset=windows-1251");
+header("Content-Type: text/html; charset=utf-8");
 
-pagehead(); // Изпращане <HEAD>...</HEAD> частта на страницата
+pagehead(); // РР·РїСЂР°С‰Р°РЅРµ <HEAD>...</HEAD> С‡Р°СЃС‚С‚Р° РЅР° СЃС‚СЂР°РЅРёС†Р°С‚Р°
 
-echo '<table bgcolor="#FFFFFF" border="0" width="100%" cellspacing="0">
-<tr><td colspan="2">
+echo '<form name="b_open" action="index.php" method="POST">
+<input type="hidden" name="cversion" value="'.$pth.'">
+<input type="button" value="'.$prev_chapter.'" onclick="goprev();">'.
+about_version();
 
-<form name="b_open" action="index.php" method="POST">
-<input type="HIDDEN" name="cversion" value="'.$pth.'">
-
-<table border="0" width="100%" cellspacing="0">
-<tr class="panel">
-
-<td class="panel"><input type="BUTTON" value="'.$prev_chapter.'" onclick="goprev();"></td>
-<td class="panel" NOWRAP>'.about_version().'</td>
-<td class="panel">
-';
-
-// Показване на select елемента за избор на Версия
-echo '<select name="version" onchange="changever();" class="w200">';
+// РџРѕРєР°Р·РІР°РЅРµ РЅР° select РµР»РµРјРµРЅС‚Р° Р·Р° РёР·Р±РѕСЂ РЅР° Р’РµСЂСЃРёСЏ
+echo '<select name="version" onchange="changever();">';
 foreach($version as $v=>$n){
  echo "\n<option value=\"$v\"";
  if ($v==$pth){ echo " selected"; }
  echo ">$n";
 }
-echo '</select>
-';
+echo '</select>';
 
-// Показване на select елемента за избор на книга
-echo '</td>
-<td NOWRAP>
-<select name="book" onchange="bookchange();">';
+// РџРѕРєР°Р·РІР°РЅРµ РЅР° select РµР»РµРјРµРЅС‚Р° Р·Р° РёР·Р±РѕСЂ РЅР° РєРЅРёРіР°
+echo '<select name="book" onchange="bookchange();">';
 for ($i=$bn[0]+1;$i<2*$bn[0]+1;$i++){
  $j=$i-$bn[0];
  $bnames[$i]=trim($bnames[$i]);
  echo "\n<option value=\"$j\"";
  if ($j==$bk){ echo " selected"; } 
- echo '>'.$bnames[$i]; 
+ echo '>';
+ // Р—Р°РіР»Р°РІРёСЏС‚Р° РЅР° РєРЅРёРіРёС‚Рµ РІ РіСЂСЉС†РєРёСЏ РќРѕРІ Р·Р°РІРµС‚ СЃР° РЅР° РєРёСЂРёР»РёС†Р°
+ if($pth=='Gr/') echo iconv("windows-1253",'utf-8',$bnames[$i]); else
+ echo iconv($enc,'utf-8',$bnames[$i]);
 }
 echo '</select>';
 
-// Показване на select елемента за избор на глава
-echo "\n".'<select name="chapter" onchange="document.forms[0].submit();">';
+// РџРѕРєР°Р·РІР°РЅРµ РЅР° select РµР»РµРјРµРЅС‚Р° Р·Р° РёР·Р±РѕСЂ РЅР° РіР»Р°РІР°
+echo '<select name="chapter" onchange="document.forms[0].submit();">';
 for ($i=1;$i<count($vcount[$bk]);$i++){
  if ($i==$ch){ echo "\n<option selected>"; } else { echo "\n<option>"; }
  echo $i; 
 }
-echo '</select>
-<input type="SUBMIT" value="'.$open_chapter.'">
-</td>
-<td class="panel" align="right"><input type="BUTTON" value="'.$next_chapter.'" onclick="gonext();"></td>
-</tr>
-</table>
+echo '</select><input type="submit" value="'.$open_chapter.'"><input type="button" value="'.$next_chapter.'" class="right" onclick="gonext();">
 </form>
 
-'.parallel_form().'
+'.parallel_form();
 
-</td></tr>
-<tr valign="top"><td>
-';
-
-// Показване на заглавието на текста
-if (count($bn)>21){
- if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ echo "<h1>$word_psalm &nbsp;$ch</h1>"; }
+// РџРѕРєР°Р·РІР°РЅРµ РЅР° Р·Р°РіР»Р°РІРёРµС‚Рѕ РЅР° С‚РµРєСЃС‚Р°
+if ( is_array($bn) && (count($bn)>21) ){
+ if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ echo iconv($enc,'utf-8',"<h1>$word_psalm &nbsp;$ch</h1>"); }
  else {
   if ($bk>$bn[0]) echo "<p>$missing_book";
-  else echo "<h1>".$hlang->encode($bnames[$bk])."<br>$word_chapter &nbsp;$ch</h1>"; 
+  else echo "<h1>".iconv($enc,'utf-8',$hlang->encode($bnames[$bk]))."<br>$word_chapter &nbsp;$ch</h1>";
  }
 }
 else { echo "<P>$missing_files"; }
 
-//Показване на формата за търсене и линк "Тълкувание"
-echo '</td><td align="right" NOWRAP>
-'.search_form("right").'
-'.coment_link().
-'</td></tr><tr><td colspan="2" height="400" valign="top">
-';
+//РџРѕРєР°Р·РІР°РЅРµ РЅР° С„РѕСЂРјР°С‚Р° Р·Р° С‚СЉСЂСЃРµРЅРµ Рё Р»РёРЅРє "РўСЉР»РєСѓРІР°РЅРёРµ"
+echo search_form("right").'
+'.coment_link();
 
-if (count($bn)>21){ // Изпълнява се ако версията съществува
+if ( is_array($bn) && (count($bn)>21) ){ // РР·РїСЉР»РЅСЏРІР° СЃРµ Р°РєРѕ РІРµСЂСЃРёСЏС‚Р° СЃСЉС‰РµСЃС‚РІСѓРІР°
 
-//Пресмятане индекса на първия стих
+//РџСЂРµСЃРјСЏС‚Р°РЅРµ РёРЅРґРµРєСЃР° РЅР° РїСЉСЂРІРёСЏ СЃС‚РёС…
 $vi=vindex($bk,$ch,$vcount);
 
-//Отваряне на файловете с указателите и текста
+//РћС‚РІР°СЂСЏРЅРµ РЅР° С„Р°Р№Р»РѕРІРµС‚Рµ СЃ СѓРєР°Р·Р°С‚РµР»РёС‚Рµ Рё С‚РµРєСЃС‚Р°
 $pf=fopen($pth.'CompactPoint.bin','r');
 $tf=fopen($pth.'CompactText.bin','r');
 
-// Четене и показване на стиховете от текущата глава
+// Р§РµС‚РµРЅРµ Рё РїРѕРєР°Р·РІР°РЅРµ РЅР° СЃС‚РёС…РѕРІРµС‚Рµ РѕС‚ С‚РµРєСѓС‰Р°С‚Р° РіР»Р°РІР°
 $cvc = isset($vcount[$bk][$ch]) ? $vcount[$bk][$ch] : 0;
 for ($i=0;$i<$cvc;$i++){
- $vt=read_verse($pf,$tf,$vi+$i);
+ $vt=read_verse($enc,$pf,$tf,$vi+$i);
  $i1=$i+1;
  if ($vr==$i1){ $bl='<p class="averse">'; }
  else { $bl='<p>'; }
- if ($vr)  $bl="<a name=\"$i1\"></a>\n".$bl;
+ if ($vr)  $bl='<a id="'.$i1."\"></a>\n".$bl;
  if ($i1<10) $bl=$bl.'&nbsp; ';
- $bl=$bl.'<A HREF="" TITLE="'.$word_parallel.
-     '" CLASS="prl" ONCLICK="parallel('.$i.','.($vi+$i).');return false;">'.
-     $i1.'</A> ';
- if ($vt)  echo "\n$bl$vt";
+ $bl=$bl.'<a href="#" title="'.$word_parallel.
+     '" class="prl" onclick="parallel('.$i.','.($vi+$i).');return false;">'.
+     $i1.'</a> ';
+ if ($vt)  echo iconv($enc,'utf-8',"\n$bl$vt");
 }
 
-//Зетваряне на файловете с указателите и текста
+//Р—РµС‚РІР°СЂСЏРЅРµ РЅР° С„Р°Р№Р»РѕРІРµС‚Рµ СЃ СѓРєР°Р·Р°С‚РµР»РёС‚Рµ Рё С‚РµРєСЃС‚Р°
 fclose($tf);
 fclose($pf);
 
 if ($fnotes) 
 echo "\n".'<P>&nbsp;
-<HR SIZE="1" ALIGN="left" WIDTH="30%">
-<A NAME="fnotes"></A>'.$fnotes;
+<HR SIZE="1">
+<a id="fnotes"></a>'.$fnotes;
 
 }
 
-//Показване на долните бутони
-echo '<p>&nbsp;
-</td></tr><tr><td colspan="2">
-<table width="100%" cellspacing="0"><tr>
-<td class="panel"><input type="BUTTON" value="'.$prev_chapter.'" onclick="goprev();"></td>
+//РџРѕРєР°Р·РІР°РЅРµ РЅР° РґРѕР»РЅРёС‚Рµ Р±СѓС‚РѕРЅРё
+echo '<p>&nbsp;</p>
+<div class="bottom">
+<input type="button" value="'.$prev_chapter.'" onclick="goprev();">
 '.about_the_project().'
-<td align="right" class="panel"><input type="BUTTON" value="'.$next_chapter.'" onclick="gonext();"></td>
-</tr></table>
-</td></tr></table>
-
+<input type="BUTTON" value="'.$next_chapter.'" class="right" onclick="gonext();">
+<p style="clear:both;"></p>
+</div>
 ';
 
-//--------ФУНКЦИИ-----------
+
+//--------Р¤РЈРќРљР¦РР-----------
 
 function determinenextandprev(){
 global $vcount,$bk,$ch,$nxbk,$nxch,$prbk,$prch;
@@ -184,6 +163,7 @@ if($ch==1){
   $nxbk=$bk;
   $nxch=2;
 }
+if(empty($vcount[$bk])) return '';
 if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1)) ){
   $prbk=$bk;
   $prch=$ch-1;
@@ -196,17 +176,24 @@ if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1)) ){
 function pagehead(){
 global $on_other_sites,$version,$pth,$vcount,$nxbk,$nxch,$prbk,$prch;
 determinenextandprev();
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<HTML>
+echo '<!DOCTYPE html>
+<html lang="bg">
 
 <HEAD>
-  <TITLE>Библията на български - php реализация</TITLE>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
-  <META name="keywords" content="Библия,Библията,търсене,онлайн,преводи на български,руски,английски,македонски,сръбски">
-  <META name="description" content="Библията на български и други езици; търсене в Библията; php скриптове с отворен код за представяне на Библията върху отдалечен или локален сървър.">
+  <TITLE>Р‘РёР±Р»РёСЏС‚Р° РЅР° Р±СЉР»РіР°СЂСЃРєРё - php СЂРµР°Р»РёР·Р°С†РёСЏ</TITLE>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:type" content="article">
+  <meta property="fb:app_id" content="1350744361603908">
+  <meta property="og:url" content="http://vanyog.com/bible/php">
+  <meta property="og:image" content="http://vanyog.com/bible/php/chetveroevangelie.jpg">
+  <meta property="og:title" content="Р‘РёР±Р»РµСЏ - РѕРЅР»Р°Р№РЅ РЅР° Р±СЉР»РіР°СЂСЃРєРё Рё РґСЂ. РµР·РёС†Рё">
+  <meta property="og:description" content="Р‘РёР±Р»РёСЏС‚Р°; С‚СЉСЂСЃРµРЅРµ РІ Р‘РёР±Р»РёСЏС‚Р°; php СЃРєСЂРёРїС‚РѕРІРµ СЃ РѕС‚РІРѕСЂРµРЅ РєРѕРґ Р·Р° РїСЂРµРґСЃС‚Р°РІСЏРЅРµ РЅР° Р‘РёР±Р»РёСЏС‚Р° РІСЉСЂС…Сѓ РѕС‚РґР°Р»РµС‡РµРЅ РёР»Рё Р»РѕРєР°Р»РµРЅ СЃСЉСЂРІСЉСЂ.">
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+  <META name="keywords" content="Р‘РёР±Р»РёСЏ,Р‘РёР±Р»РёСЏС‚Р°,С‚СЉСЂСЃРµРЅРµ,РѕРЅР»Р°Р№РЅ,РїСЂРµРІРѕРґРё РЅР° Р±СЉР»РіР°СЂСЃРєРё,СЂСѓСЃРєРё,Р°РЅРіР»РёР№СЃРєРё,РјР°РєРµРґРѕРЅСЃРєРё,СЃСЂСЉР±СЃРєРё">
+  <META name="description" content="Р‘РёР±Р»РёСЏС‚Р° РЅР° Р±СЉР»РіР°СЂСЃРєРё Рё РґСЂСѓРіРё РµР·РёС†Рё; С‚СЉСЂСЃРµРЅРµ РІ Р‘РёР±Р»РёСЏС‚Р°; php СЃРєСЂРёРїС‚РѕРІРµ СЃ РѕС‚РІРѕСЂРµРЅ РєРѕРґ Р·Р° РїСЂРµРґСЃС‚Р°РІСЏРЅРµ РЅР° Р‘РёР±Р»РёСЏС‚Р° РІСЉСЂС…Сѓ РѕС‚РґР°Р»РµС‡РµРЅ РёР»Рё Р»РѕРєР°Р»РµРЅ СЃСЉСЂРІСЉСЂ.">
   <link rel=stylesheet type="text/CSS" href="php-bible.css">
 
-<script type="text/javascript">
+<script>
 var El=[];
 if(typeof opera == "undefined" && document.all)
   Browser = "IE";
@@ -281,7 +268,7 @@ document.b_parallel.submit();
 
 </HEAD>
 
-<BODY>
+<body><div id="all_page">
 ';
 }
 
@@ -296,12 +283,12 @@ if ( (($pth=='38/')   && ($bk>38) && ($bk<=$bn[0]))
    rawurlencode(
     trim($bnames[$bk+2*$bn[0]])." $ch:1"
    ).
-  '">Тълкувание</a>&nbsp;&nbsp;';
+  '">РўСЉР»РєСѓРІР°РЅРёРµ</a>&nbsp;&nbsp;';
 }
 return $r;
 }
 
 ?>
 
-</BODY>
-</HTML>
+<div></body>
+</html>

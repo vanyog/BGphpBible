@@ -1,9 +1,9 @@
 <?php
-$search_result_for="Ðåçóëòàò îò òúðñåíå íà";
-$word_bible="Áèáëèÿ";
-$show_verse_text="Ïîêàæè öåëè ñòèõîâå";
-$found_in="ñðåùàíèÿ â";
-$neighbour_words="Áëèçêè äóìè";
-$more_results="Îùå ðåçóëòàòè";
-$not_found="íå ñå ñðåùà";
+$search_result_for="Ð ÐµÐ·ÑƒÐ»Ñ‚Ð°Ñ‚ Ð¾Ñ‚ Ñ‚ÑŠÑ€ÑÐµÐ½Ðµ Ð½Ð°";
+$word_bible="Ð‘Ð¸Ð±Ð»Ð¸Ñ";
+$show_verse_text="ÐŸÐ¾ÐºÐ°Ð¶Ð¸ Ñ†ÐµÐ»Ð¸ ÑÑ‚Ð¸Ñ…Ð¾Ð²Ðµ";
+$found_in="ÑÑ€ÐµÑ‰Ð°Ð½Ð¸Ñ Ð²";
+$neighbour_words="Ð‘Ð»Ð¸Ð·ÐºÐ¸ Ð´ÑƒÐ¼Ð¸";
+$more_results="ÐžÑ‰Ðµ Ñ€ÐµÐ·ÑƒÐ»Ñ‚Ð°Ñ‚Ð¸";
+$not_found="Ð½Ðµ ÑÐµ ÑÑ€ÐµÑ‰Ð°";
 ?>

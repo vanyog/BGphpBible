@@ -23,9 +23,9 @@ $nocite=ifposted("nocite",0);
 
 $tolink=array();
 
-function cite2($start,$count,$text){ // показване на една глава от Библията
-// $start - глобалния номер на първи стих от главата
-// $count - броя стихове в главата
+function cite2($start,$count,$text){ // РїРѕРєР°Р·РІР°РЅРµ РЅР° РµРґРЅР° РіР»Р°РІР° РѕС‚ Р‘РёР±Р»РёСЏС‚Р°
+// $start - РіР»РѕР±Р°Р»РЅРёСЏ РЅРѕРјРµСЂ РЅР° РїСЉСЂРІРё СЃС‚РёС… РѕС‚ РіР»Р°РІР°С‚Р°
+// $count - Р±СЂРѕСЏ СЃС‚РёС…РѕРІРµ РІ РіР»Р°РІР°С‚Р°
 global $option,$bversion,$nocite,$tolink;
 $bt='';
 if (!$nocite){
@@ -33,14 +33,14 @@ if (!$nocite){
  if ($bversion=="38/")
  { $start=$start+23144; }
  $bible_path=$option['absolute_path'].'/b/'.$bversion.'/';
- // Четене на указателя към началото на първия стих
+ // Р§РµС‚РµРЅРµ РЅР° СѓРєР°Р·Р°С‚РµР»СЏ РєСЉРј РЅР°С‡Р°Р»РѕС‚Рѕ РЅР° РїСЉСЂРІРёСЏ СЃС‚РёС…
  $pf=fopen($bible_path.'CompactPoint.bin','r');
  fseek($pf,$start*4);
  $posv=fread($pf,4);
  $posv=ord($posv[0])+256*ord($posv[1])+256*256*ord($posv[2])+
    256*256*256*ord($posv[3]);
  fclose($pf);
- // Четене на стиховете
+ // Р§РµС‚РµРЅРµ РЅР° СЃС‚РёС…РѕРІРµС‚Рµ
  $n=1;
  $tf=fopen($bible_path.'CompactText.bin','r');
  fseek($tf,$posv);
@@ -66,7 +66,7 @@ return cite_form().$bt.$text;
 function targeted_text($text){
 global $tolink;
 $tl=strlen($text);
-$fr='<p>Ст. ';
+$fr='<p>РЎС‚. ';
 $frl=strlen($fr);
 $j=0; $n=''; $k=0; $p=0; $r='';
 for($i=0; $i<$tl; $i++){
@@ -78,7 +78,7 @@ for($i=0; $i<$tl; $i++){
   if (($c<"0")||($c>"9")){
    $tolink[]=$n;
    $r=$r.substr($text,$p,$i-strlen($n)-$frl-$p).
-   "\n".'<p><a name="c'.$n.'"></a><a href="#v'.$n.'">Ст. '.$n.'</a>';
+   "\n".'<p><a name="c'.$n.'"></a><a href="#v'.$n.'">РЎС‚. '.$n.'</a>';
    $k=0; $n=''; $p=$i;
   }
   else { $n=$n.$c; }
@@ -93,7 +93,7 @@ global $nocite;
 $c=''; if ($nocite){ $c=" checked"; }
 return '
 
-<script type="text/javascript">
+<script>
 function ChangeVersion(){
  f=document.forms.ntform;
  f.nocite.checked=false;
@@ -109,13 +109,13 @@ function ChangeShowing(){
 }
 </script>
 <form name="ntform" method="POST" action="'.$_SERVER['PHP_SELF'].'">
-<p class="ntcite" align="right">
+<p class="ntcite">
  <input type="CHECKBOX" name="nocite" value="1"
  onclick="ChangeShowing();"'.$c.'> 
-Без цитат. Цитат от: 
+Р‘РµР· С†РёС‚Р°С‚. Р¦РёС‚Р°С‚ РѕС‚: 
 <select name="version" onchange="ChangeVersion();">
-'.fsoption("38/").'Ревизираното издание
-'.fsoption("Tzrg/").'Цариградското издание
+'.fsoption("38/").'Р РµРІРёР·РёСЂР°РЅРѕС‚Рѕ РёР·РґР°РЅРёРµ
+'.fsoption("Tzrg/").'Р¦Р°СЂРёРіСЂР°РґСЃРєРѕС‚Рѕ РёР·РґР°РЅРёРµ
 </select>. 
 </form>
 ';
