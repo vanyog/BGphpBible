@@ -18,7 +18,7 @@ CookieManager.setCookie = function (sName, sValue, nDays) {
 CookieManager.getCookie = function (sName) {
 	var re = new RegExp("(\;|^)[^;]*(" + sName + ")\=([^;]*)(;|$)");
 	var res = re.exec(document.cookie);
-	return res != null ? unescape(res[3]) : null;
+    return res !== null ? unescape(res[3]) : null;
 };
 
 CookieManager.removeCookie = function (name) {

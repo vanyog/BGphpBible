@@ -49,7 +49,7 @@ header("Content-Type: text/html; charset=utf-8");
 
 pagehead(); // Изпращане <HEAD>...</HEAD> частта на страницата
 
-echo '<form name="b_open" action="index.php" method="POST">
+echo '<form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
 <input type="button" value="'.$prev_chapter.'" onclick="goprev();">'.
 about_version();
@@ -116,14 +116,13 @@ $cvc = isset($vcount[$bk][$ch]) ? $vcount[$bk][$ch] : 0;
 for ($i=0;$i<$cvc;$i++){
  $vt=read_verse($enc,$pf,$tf,$vi+$i);
  $i1=$i+1;
- if ($vr==$i1){ $bl='<p class="averse">'; }
- else { $bl='<p>'; }
- if ($vr)  $bl='<a id="'.$i1."\"></a>\n".$bl;
+ if ($vr==$i1){ $bl='<p class="averse" id="'.$i1.'">'; }
+ else { $bl='<p id="'.$i1.'">'; }
  if ($i1<10) $bl=$bl.'&nbsp; ';
  $bl=$bl.'<a href="#" title="'.$word_parallel.
      '" class="prl" onclick="parallel('.$i.','.($vi+$i).');return false;">'.
      $i1.'</a> ';
- if ($vt)  echo iconv($enc,'utf-8',"\n$bl$vt");
+ if ($vt)  echo "\n$bl".iconv($enc,'utf-8',$vt);
 }
 
 //Зетваряне на файловете с указателите и текста
@@ -174,7 +173,7 @@ if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1)) ){
 }
 
 function pagehead(){
-global $on_other_sites,$version,$pth,$vcount,$nxbk,$nxch,$prbk,$prch;
+global $on_other_sites,$version,$pth,$vcount,$nxbk,$nxch,$prbk,$prch,$cookie_message;
 determinenextandprev();
 echo '<!DOCTYPE html>
 <html lang="bg">
@@ -185,15 +184,18 @@ echo '<!DOCTYPE html>
   <meta property="og:type" content="article">
   <meta property="fb:app_id" content="1350744361603908">
   <meta property="og:url" content="http://vanyog.com/bible/php">
-  <meta property="og:image" content="http://vanyog.com/bible/php/chetveroevangelie.jpg">
-  <meta property="og:title" content="Библея - онлайн на български и др. езици">
+  <meta property="og:image" content="http://vanyog.com/bible/php/images/chetveroevangelie.jpg">
+  <meta property="og:title" content="Библия - онлайн на български и др. езици">
   <meta property="og:description" content="Библията; търсене в Библията; php скриптове с отворен код за представяне на Библията върху отдалечен или локален сървър.">
+  <link rel="shortcut icon" sizes="192x192" href="images/web-icon-1.png">
   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
   <META name="keywords" content="Библия,Библията,търсене,онлайн,преводи на български,руски,английски,македонски,сръбски">
   <META name="description" content="Библията на български и други езици; търсене в Библията; php скриптове с отворен код за представяне на Библията върху отдалечен или локален сървър.">
   <link rel=stylesheet type="text/CSS" href="php-bible.css">
+  <script src="js/cookies.js"></script>
 
 <script>
+var cookie_message = "'.$cookie_message.'";
 var El=[];
 if(typeof opera == "undefined" && document.all)
   Browser = "IE";
@@ -264,11 +266,15 @@ document.b_parallel.index.value=i
 document.b_parallel.submit();
 }
 
+function onBodyScroll(e){
+//   cookie_set("bscrollY",e.scrollY);
+}
+
 </script>
 
 </HEAD>
 
-<body><div id="all_page">
+<body onscroll="onBodyScroll(this);"><div id="all_page">
 ';
 }
 

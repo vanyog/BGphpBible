@@ -45,7 +45,7 @@ return '<FORM METHOD="POST" ACTION="parallel.php" NAME="b_parallel">
 function search_form(){
 global $pth, $bk, $ch, $shv, $word_search, 
  $motranslator, $motrans_help_tip, $motrans_help, $motrans_lang_tip,
- $search_edit_size;
+ $search_edit_size, $form_metod;
 $mt=''; $ml='';
 if ($motranslator) {
 $mt='
@@ -62,7 +62,7 @@ cTranslator.registerLang( cCyrPho )
 ';
 $ml='MOLANG="DEFAULT" ';
 }
-return '<form name="b_search" method="POST" action="search.php">'.$mt.
+return '<form name="b_search" method="'.$form_metod.'" action="search.php">'.$mt.
 '<input type="HIDDEN" name="version" value="'.$pth.'">
 <input type="HIDDEN" name="book" value="'.$bk.'">
 <input type="HIDDEN" name="chapter" value="'.$ch.'">
@@ -94,17 +94,22 @@ if ($vp!=4294967295){
  $vl=fread($tf,2); $vl=ord($vl[0])+ord($vl[1])*256;
  $vt=decode(fread($tf,$vl));
  $p1=strpos($vt,"{");
- if ($p1>-1){
+ while ($p1>-1){
   $p2=strpos($vt,"}");
   $findex++;
   $fnotes.="\n".'<P><SPAN CLASS="fnotes"><SUP>'.$findex.'</SUP></SPAN> '.
-           iconv($enc,'utf-8',substr($vt,$p1+1,$p2-$p1-1));
+           iconv($enc,'utf-8',make_format(substr($vt,$p1+1,$p2-$p1-1)) );
   if ($p1<1) $p1++;
   $vt=substr($vt,0,$p1-1).'<A HREF="#fnotes" CLASS="fnotes"><SUP>'.$findex.'</SUP></A>'.substr($vt,$p2+2);
+  $p1=strpos($vt,"{");
  }
 }
-$vt = preg_replace('/\|(.*?)\|/', '<i>${1}</i>', $vt);
-return $vt;
+return make_format($vt);
+}
+
+function make_format($vt){
+$vt = preg_replace('/(\{.*?\})/', '<span class="note">${1}</span>', $vt);
+return preg_replace('/\|(.*?)\|/', '<i>${1}</i>', $vt);
 }
 
 function read_vpos($pf,$vi){
@@ -130,7 +135,7 @@ global $bnames,$bk,$ch,$vr;
 $d=explode(' ',rawurldecode($_SERVER['QUERY_STRING']));
 if(!isset($d[1])) $d[1] = 0;
 if(!isset($d[2])) $d[2] = '';
-if (!(1*$d[1])){ $bkn=$d[0].' '.$d[1]; $chv=$d[2]; }
+if (!intval($d[1])){ $bkn=$d[0].' '.$d[1]; $chv=$d[2]; }
 else { $bkn=$d[0]; $chv=$d[1]; }
 $lns=file("Abrevs.txt");
 foreach($lns as $l){
@@ -139,7 +144,7 @@ foreach($lns as $l){
  if ($i[0]==$bkn){
   $n=explode(' ',$bnames[0]);
   for($j=1;$j<count($n);$j++){
-   if ($n[$j]-$i[1]==0){
+   if (intval($n[$j])-intval($i[1])==0){
     $bk=$j;
     $k=explode(':',$chv);
     $ch=$k[0];

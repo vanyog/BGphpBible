@@ -18,6 +18,7 @@ $version = array(
 );
 
 // този масив описва кои версии на Библията се намират на други сайтове
+// и при опит за отваряне се отива и се отваря съответния сайт
 $on_other_sites = array(
 'mk/'=>"http://mkbible.net/biblija/index.php",
 'Mac1/'=>"http://mkbible.net/biblija/index.php",
@@ -27,7 +28,7 @@ $on_other_sites = array(
 
 $default_version='38/'; // Библия, която се отваря по подразбиране
 $language='bg';         // Език на интерфейса на сайта
-$motranslator=true;     // Дали да се ползват скриптовете motranslator.js
+$motranslator=false;     // Дали да се ползват скриптовете motranslator.js
 $search_edit_size=40;   // Ширина на текстовото поле за въвеждане на текст за търсене
 
 // функция за определяне езика на версиите на Библията
@@ -40,6 +41,19 @@ switch ($pth){
  case 'Ru/': return 'ru'; break;
  case 'Gr/': return 'gr'; break;
  default: return 'bg';
+}
+}
+
+// кодиране на текстовете
+function version_encoding($pth){
+switch ($pth){
+ case 'Asv/': return 'iso-8859-1'; break;
+ case 'KJV/': return 'iso-8859-1'; break;
+ case 'KjvSn/': return 'iso-8859-1'; break;
+ case 'Mac07/': return 'windows-1251'; break;
+ case 'Ru/': return 'windows-1251'; break;
+ case 'Gr/': return 'ISO-8859-1'; break;
+ default: return 'windows-1251';
 }
 }
 

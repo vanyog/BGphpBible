@@ -4,6 +4,8 @@ body {
  background-color:#939393;
 }
 
+span.note { color:green; }
+
 #all_page { background-color: #ffffff; }
 
 input[type=button].right { float:right; margin-top: 2px; }

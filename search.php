@@ -130,7 +130,7 @@ while ($i<$iend){
  if ($b!=$b0){ $r=$r."\n<p><b>".iconv($enc,'utf-8',$b)."</b>:"; }
  $r=$r."\n".' <a href="#" onclick="OpenVerse('.
     "$bk1,$ch1,$vr".');return false;">'."$ch1:$vr".'</a>';
- if ($shv){ $r=$r.' '.iconv($enc,'utf-8',bverse($c[$i])).'<br>'; }
+ if ($shv){ $r=$r.' '.make_format(iconv($enc,'utf-8',bverse($c[$i]))).'<br>'; }
  else { $r=$r.', '; }
  $i++; $ch1--;
  $gi=$g;
@@ -235,7 +235,7 @@ return ord($r[0])+256*ord($r[1])+256*256*ord($r[2])+256*256*256*ord($r[3]);
 
 
 function Start_page(){
-global $pth,$enc,$bk,$ch,$sst,$search_result_for,$word_bible;
+global $pth,$enc,$bk,$ch,$sst,$search_result_for,$word_bible,$form_metod;
 echo '<!DOCTYPE html>
 <html lang="bg">
 
@@ -277,7 +277,7 @@ function ShowWithV(){
 
 <BODY>
 
-<form name="f1" method="POST" action="index.php">
+<form name="f1" method="'.$form_metod.'" action="index.php">
 <input type="HIDDEN" name="version" value="'.$pth.'">
 <input type="HIDDEN" name="book" value="'.$bk.'">
 <input type="HIDDEN" name="chapter" value="'.$ch.'">
