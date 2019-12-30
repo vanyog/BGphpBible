@@ -18,23 +18,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+error_reporting(E_ALL); ini_set('display_errors',1);
+
 include("_options.php");
 include("index-$language.php");
 include("functions.php");
 
-$pt0=posted('cversion','');   // Директория на предишната показвана Библия
-$pth=posted('version',$default_version); // Директорията с файловете на показваната Библия
-$enc=version_encoding($pth);
-include("hlanguage.php");     // Зарежда обекта със зависещи от езика функции
-$bk=posted('book',1);         // Номер на текущата книга
-$ch=posted('chapter',1);      // Номер на текущата глава
-$vr=posted('verse',0);        // Номер на текущия стих
-
+$pt0=posted('cversion','');                                   // Директория на предишната показвана Библия
+$pth=posted('version',cookie_or('version',$default_version)); // Директорията с файловете на показваната Библия
+$enc=version_encoding($pth);                                  // Кодировка на показваната Библия
+include_once("hlanguage.php");                     // Зарежда обекта със зависещи от езика функции
+$bk=posted('book',cookie_or('book',1));       // Номер на текущата книга
+$ch=posted('chapter',cookie_or('chapter',1)); // Номер на текущата глава
+$vr=posted('verse',cookie_or('verse',0));     // Номер на текущия стих
+//die("$pth, $bk, $ch, $vr");
 $apth=a_path($pth);           // Абсолютната директория с файловете на Библията
 include("structure.php");     // Зарежда описанието на структурата на Библията
 $shv=1; // Да се показват цели стихове в резултата от търсенето
 $fnotes=''; // Бележки под линия
 $findex=0;  // Номер на бележката под линия
+$pstyle=para_style($pth);
 
 // Ако се сменя версията, се коригират номерата на стиховете, за да си съответстват по смисъл
 if ( ($pth!=$pt0) && in_array($pt0,array_keys($version)) 
@@ -71,7 +74,7 @@ for ($i=$bn[0]+1;$i<2*$bn[0]+1;$i++){
  echo "\n<option value=\"$j\"";
  if ($j==$bk){ echo " selected"; } 
  echo '>';
- // Заглавията на книгите в гръцкия Нов завет са на кирилица
+ // Заглавията на книгите в гръцкия Нов завет са с различна кодировка
  if($pth=='Gr/') echo iconv("windows-1253",'utf-8',$bnames[$i]); else
  echo iconv($enc,'utf-8',$bnames[$i]);
 }
@@ -79,7 +82,7 @@ echo '</select>';
 
 // Показване на select елемента за избор на глава
 echo '<select name="chapter" onchange="document.forms[0].submit();">';
-for ($i=1;$i<count($vcount[$bk]);$i++){
+for ($i=1;$i<(is_array($vcount[$bk])?count($vcount[$bk]):0);$i++){
  if ($i==$ch){ echo "\n<option selected>"; } else { echo "\n<option>"; }
  echo $i; 
 }
@@ -115,14 +118,25 @@ $tf=fopen($pth.'CompactText.bin','r');
 $cvc = isset($vcount[$bk][$ch]) ? $vcount[$bk][$ch] : 0;
 for ($i=0;$i<$cvc;$i++){
  $vt=read_verse($enc,$pf,$tf,$vi+$i);
+ $a=explode('$$',$vt);
+ $bf='';
+ switch(count($a)){
+ case 2: $bf=$a[0]; $vt=$a[1]; break;
+ case 3: $bf=$a[0].$a[1]; $vt=$a[2]; break;
+ }
  $i1=$i+1;
- if ($vr==$i1){ $bl='<p class="averse" id="'.$i1.'">'; }
- else { $bl='<p id="'.$i1.'">'; }
- if ($i1<10) $bl=$bl.'&nbsp; ';
+ echo iconv($enc,'utf-8',$bf);
+ $bl='<p '; $ct = "</p>\n";
+ if ($vr==$i1){ $bl.='class="averse" id="'.$i1.'">'; }
+ else { $bl.='id="'.$i1.'">'; }
+ if (!$pstyle && $i1<10) $bl=$bl.'&nbsp; ';
+ if(iconv($enc,'utf-8',mb_substr($vt,0,1))=='¶')
+      { $bl = '<p class="bigpar"><span'.substr($bl,2); $ct="</span>\n"; $vt = mb_substr($vt,1); }
+ else if($pstyle) { $bl = '<span'.substr($bl,2); $ct="</span>\n"; }
  $bl=$bl.'<a href="#" title="'.$word_parallel.
      '" class="prl" onclick="parallel('.$i.','.($vi+$i).');return false;">'.
      $i1.'</a> ';
- if ($vt)  echo "\n$bl".iconv($enc,'utf-8',$vt);
+ if ($vt) echo "$bl".iconv($enc,'utf-8//IGNORE',$vt).$ct;
 }
 
 //Зетваряне на файловете с указателите и текста
@@ -131,7 +145,7 @@ fclose($pf);
 
 if ($fnotes) 
 echo "\n".'<P>&nbsp;
-<HR SIZE="1">
+<hr>
 <a id="fnotes"></a>'.$fnotes;
 
 }
@@ -148,6 +162,11 @@ echo '<p>&nbsp;</p>
 
 
 //--------ФУНКЦИИ-----------
+
+function cookie_or($n, $v){//die(print_r($_COOKIE,true));
+if(isset($_COOKIE[$n])) return $_COOKIE[$n];
+else return $v;
+}
 
 function determinenextandprev(){
 global $vcount,$bk,$ch,$nxbk,$nxch,$prbk,$prch;
@@ -173,7 +192,7 @@ if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1)) ){
 }
 
 function pagehead(){
-global $on_other_sites,$version,$pth,$vcount,$nxbk,$nxch,$prbk,$prch,$cookie_message;
+global $on_other_sites,$version,$pth,$bk,$ch,$vr,$vcount,$nxbk,$nxch,$prbk,$prch,$cookie_message;
 determinenextandprev();
 echo '<!DOCTYPE html>
 <html lang="bg">
@@ -236,6 +255,7 @@ function bookchange(){
 }
 
 function gonext(){
+cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($nxbk-1).'";
 document.b_open.book.value="'.($nxbk).'";
 document.b_open.chapter.selectedIndex='.($nxch-1).';
@@ -243,6 +263,7 @@ document.b_open.submit();
 }
 
 function goprev(){
+cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($prbk-1).'";
 document.b_open.book.value="'.($prbk).'";
 bookchange();
@@ -266,8 +287,13 @@ document.b_parallel.index.value=i
 document.b_parallel.submit();
 }
 
+cookie_set("version","'.$pth.'");
+cookie_set("book","'.$bk.'");
+cookie_set("chapter","'.$ch.'");
+cookie_set("verse","'.$vr.'");
+
 function onBodyScroll(e){
-//   cookie_set("bscrollY",e.scrollY);
+   cookie_set("bscrollY",e.scrollY);
 }
 
 </script>
@@ -285,7 +311,7 @@ if ( (($pth=='38/')   && ($bk>38) && ($bk<=$bn[0]))
   || (($pth=='Tzrg/') && ($bk>0) && ($bk<=$bn[0]))
    )
 {
- $r='<a href="coment.php?'.
+ $r='<p><a href="coment.php?'.
    rawurlencode(
     trim($bnames[$bk+2*$bn[0]])." $ch:1"
    ).
@@ -295,6 +321,10 @@ return $r;
 }
 
 ?>
-
-<div></body>
+<div>
+<script>
+var bscrollY = cookie_value("bscrollY");
+window.scrollTo(0, cookie_value("bscrollY"));
+</script>
+</body>
 </html>

@@ -33,17 +33,12 @@ form[name=b_search] input { max-width:calc(100% - 8px); }
 
 form[name=showv] { display:inline-block; float:right; }
 
-h1 {
- font-size: 140%;
- margin-left:10pt;
-}
+h1 { font-size: 140%; margin-left:10pt; }
+h2 { font-size: 120%; margin-left:10pt; }
+h3 { font-size: 110%; margin-left:10pt; }
 
-h2 { font-size: 120%; }
-
-p { 
- margin: 0 10pt 0 25pt; 
- text-indent:-17pt;
-}
+p { margin: 0 10pt; }
+p.bigpar { text-indent: 2em; margin-bottom: 0.5em; }
 
 a { text-decoration:none; }
 a:hover { text-decoration:underline; }
@@ -74,11 +69,7 @@ a:hover { text-decoration:underline; }
 a.w { color: #00E9FF; text-decoration: none; }
 a:hover.w { color: #FFD9D9; }
 
-.averse { 
- margin: 0 10pt 0 30pt; 
- text-indent:-20pt;
- color:green;
-}
+.averse { color:green; }
 
 .ln 
 {

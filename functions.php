@@ -25,7 +25,7 @@ global $apth,$pth,$about_version;
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
 return '<td class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 1.2.2</a>,</b>
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.0.0</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
 </td>';
@@ -86,25 +86,25 @@ else
 }
 
 function read_verse($enc,$pf,$tf,$vi){
-global $findex,$fnotes;
+//global $findex,$fnotes;
 $vt='';
 $vp=read_vpos($pf,$vi);
 if ($vp!=4294967295){
  fseek($tf,$vp);
  $vl=fread($tf,2); $vl=ord($vl[0])+ord($vl[1])*256;
- $vt=decode(fread($tf,$vl));
- $p1=strpos($vt,"{");
- while ($p1>-1){
-  $p2=strpos($vt,"}");
-  $findex++;
-  $fnotes.="\n".'<P><SPAN CLASS="fnotes"><SUP>'.$findex.'</SUP></SPAN> '.
-           iconv($enc,'utf-8',make_format(substr($vt,$p1+1,$p2-$p1-1)) );
-  if ($p1<1) $p1++;
-  $vt=substr($vt,0,$p1-1).'<A HREF="#fnotes" CLASS="fnotes"><SUP>'.$findex.'</SUP></A>'.substr($vt,$p2+2);
-  $p1=strpos($vt,"{");
- }
+ $vt=decode(fread($tf,$vl));//die($vt);
+ $vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
 }
 return make_format($vt);
+}
+
+function replace_notes($a){
+//die(print_r($a,true));
+global $findex,$fnotes,$enc;
+$findex++;
+$fnotes.="\n".'<p><span class="fnotes"><sup>'.$findex.'</sup></span> '.
+         iconv($enc,'utf-8//IGNORE',make_format($a[1]));
+return '<a href="#fnotes" class="fnotes"><sup>'.$findex.'</sup></a>';
 }
 
 function make_format($vt){
@@ -163,6 +163,13 @@ parse_str($_SERVER['QUERY_STRING'],$a);
 $c='chapter';
 if (in_array($c,array_keys($a))) $input_data=$a;
 else $input_data=$_POST;
+}
+
+function para_style($pth){
+switch ($pth) {
+case 'BL/': case 'Tzrg/': case 'Ru/': return true; break;
+default: return false;
+}
 }
 
 ?>

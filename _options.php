@@ -1,10 +1,12 @@
 <?php
 
+$form_metod = 'GET';
+
 // този масив описва кои версии на Библията да се показват
 $version = array(
 'Ort/'=>'Православна Библия 1991',   
 '38/'=>'Библия 1940',
-//'Tzrg-f/'=>'"Цариградска" Библия',
+'BL/'=>'Библейска лига',
 'Tzrg/'=>'"Цариградски" Нов завет',
 'Veren/'=>'Издателство "Верен"',
 //'mk/'=>'Македонска Библия 1999',
@@ -47,12 +49,11 @@ switch ($pth){
 // кодиране на текстовете
 function version_encoding($pth){
 switch ($pth){
- case 'Asv/': return 'iso-8859-1'; break;
- case 'KJV/': return 'iso-8859-1'; break;
- case 'KjvSn/': return 'iso-8859-1'; break;
- case 'Mac07/': return 'windows-1251'; break;
- case 'Ru/': return 'windows-1251'; break;
+ case 'Asv/':
+ case 'KJV/':
+ case 'KjvSn/':
  case 'Gr/': return 'ISO-8859-1'; break;
+ case 'BL/': return 'utf-8'; break;
  default: return 'windows-1251';
 }
 }

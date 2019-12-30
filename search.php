@@ -9,7 +9,7 @@ $pth=posted('version',$default_version); // директория с версия
 $enc=version_encoding($pth);
 $bk=posted('book',1);         // номер на книга
 $ch=posted('chapter',1);      // номер на глава
-include("hlanguage.php");     // създаване на клас HLanguage
+include_once("hlanguage.php");     // създаване на клас HLanguage
 $sst=posted('stext','Аава');  // низ от думи за търсене
 $wrd=sptlit_words($sst);      // масив от думи за търсене
 $prt=posted('part',0);        // номер на група резултати

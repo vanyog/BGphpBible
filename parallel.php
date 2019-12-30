@@ -26,7 +26,7 @@ include("parallel-$language.php");
 
 $vpth=array_keys($version);   // масив с директориите на библиите
 $pth=posted('version',$default_version); // Директорията с файловете на Библията
-include("hlanguage.php");
+include_once("hlanguage.php");
 $bk=posted('book',1);    // Номер на текущата книга
 $ch=posted('chapter',1); // Номер на текущата глава
 $vr=posted('verse',1);   // Номер на текущия стих
@@ -51,7 +51,7 @@ foreach($vpth as $p) if (!in_array($p,array_keys($on_other_sites))) parallel($p)
 // Показване на бележките под линия
 if ($fnotes) 
 echo "\n".'<P>&nbsp;
-<HR SIZE="1">
+<hr>
 <A NAME="fnotes"></A>'.$fnotes;
 
 echo '</DIV>
@@ -110,6 +110,7 @@ else {
  $tf=fopen($p.'CompactText.bin','r');
  $hlang->HLanguage(version_languege($p));
  $vt=iconv($enc,'utf-8',read_verse($enc,$pf,$tf,$vi));
+ $vt=str_replace('¶','',$vt);
  $bn3=' - '.iconv($enc,'utf-8',$bn0[2*$bn1[0]+$bk1])." $ch:$vr";
 }
 echo "\n".'<P><B><A HREF="" ONCLICK="BkToBible('
@@ -190,7 +191,7 @@ return '<input type="BUTTON" value="'.$next_verse.'" class="right" ONCLICK="Next
 function next_prev(){
 global $bn,$next_bk, $prev_bk, $next_ch, $prev_ch, $next_vr, $prev_vr;
 if ($bn) $next_bk=$bn[$next_bk];
-$gs=file("BibleStructure.txt");
+$gs=file("Bible_Structure.txt");
 $gvc=explode(' ',trim($gs[$next_bk-1]));
 if ($next_vr<$gvc[$next_ch]) $next_vr++;
 else {

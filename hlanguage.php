@@ -26,7 +26,7 @@ var $uc_l = array();
 var $sro = array();
 var $id = '';
 
-function HLanguage($hl){
+function __construct($hl){
  $this->id=$hl;
  switch ($hl){
   case 'en0': // английски + числа
