@@ -296,11 +296,25 @@ function onBodyScroll(e){
    cookie_set("bscrollY",e.scrollY);
 }
 
+var max_sh = 0;
+function page_move(el,ev){
+    var dh = document.body.clientHeight;
+    var ch = ev.pageY;
+    var wh = window.innerHeight;
+    var sh = window.scrollY;
+    if(sh>max_sh) max_sh = sh;
+    if(ch-sh<wh/4) window.scrollTo(0, sh - wh + 10);
+    if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - 10);
+    var sh1 = window.scrollY;
+    if(sh1>0 && sh1==sh) gonext();
+    if(max_sh>0 && sh1==0 && sh1==sh) goprev();
+}
+
 </script>
 
 </HEAD>
 
-<body onscroll="onBodyScroll(this);"><div id="all_page">
+<body onscroll="onBodyScroll(this);" onclick="page_move(this,event);"><div id="all_page">
 ';
 }
 

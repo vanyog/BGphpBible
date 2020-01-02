@@ -108,9 +108,11 @@ else {
  // четене на стиха $vt;
  $pf=fopen($p.'CompactPoint.bin','r');
  $tf=fopen($p.'CompactText.bin','r');
- $hlang->HLanguage(version_languege($p));
- $vt=iconv($enc,'utf-8',read_verse($enc,$pf,$tf,$vi));
- $vt=str_replace('¶','',$vt);
+ $hlang->__construct(version_languege($p));
+ $va = explode('$$',read_verse($enc,$pf,$tf,$vi));
+ $vt = end($va);
+ $vt = iconv($enc,'utf-8',$vt);
+ $vt = str_replace('¶','',$vt);
  $bn3=' - '.iconv($enc,'utf-8',$bn0[2*$bn1[0]+$bk1])." $ch:$vr";
 }
 echo "\n".'<P><B><A HREF="" ONCLICK="BkToBible('
