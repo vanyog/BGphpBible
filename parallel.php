@@ -98,11 +98,12 @@ if (file_exists($dfn)){
 // определяне "локалния" номер на книгата $bk1
 $bn0=file($p."BibleTitles.txt");
 $bn1=explode(' ',trim($bn0[0]));
-if ($pth!='/') $bk1=array_search( $bn[$bk],array_slice($bn1,1) ) + 1;
-else $bk1=array_search( $bk,array_slice($bn1,1) ) + 1;
-if (($bk1==1)&&($bk!=1)) // ако няма такава книга
+if ($pth!='/') $bk1=array_search( $bn[$bk],array_slice($bn1,1) );
+else $bk1=array_search( $bk,array_slice($bn1,1),true );
+if ($bk1===false) // ако няма такава книга
 { $vt=''; $bn3=''; $bk1=1; $vr=''; }
 else {
+ $bk++;
  // определяне индакса на стиха
  $vi=vindex($bk1,$ch,get_structure($bn0,$p))+$vr-1;
  // четене на стиха $vt;

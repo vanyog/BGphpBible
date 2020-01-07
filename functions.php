@@ -92,9 +92,14 @@ $vp=read_vpos($pf,$vi);
 if ($vp!=4294967295){
  fseek($tf,$vp);
  $vl=fread($tf,2); $vl=ord($vl[0])+ord($vl[1])*256;
- $vt=decode(fread($tf,$vl));//die($vt);
+ $vt=decode(fread($tf,$vl)); //die($vt);
  $vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
 }
+return make_format($vt);
+}
+
+function fromt_verse($vt){
+$vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
 return make_format($vt);
 }
 

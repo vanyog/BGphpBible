@@ -12,6 +12,7 @@ $ch=posted('chapter',1);      // номер на глава
 include_once("hlanguage.php");     // създаване на клас HLanguage
 $sst=posted('stext','Аава');  // низ от думи за търсене
 $wrd=sptlit_words($sst);      // масив от думи за търсене
+//die("$sst<br>".print_r($wrd,true));
 $prt=posted('part',0);        // номер на група резултати
 $shv=posted('showv',1);       // дали да се показват целите стихове
 if (!file_exists($pth.'WordPoint.bin'))
@@ -33,7 +34,7 @@ if (count($wrd)){
   $vpf=fopen($pth.'CompactPoint.bin','r');
   $vtf=fopen($pth.'CompactText.bin','r');
  }
- 
+
  // съставяне на масива $c с индекси на намерените стихове
  $c=bwverses($wrd[0]);
  $wlnx=bnwords($wplace);
@@ -69,12 +70,19 @@ else { echo "<P>$not_found"; }
 
 echo list_to_text($c);
 
+if ($shv && $fnotes)
+echo "\n".'<P>&nbsp;
+<hr>
+<a id="fnotes"></a>'.$fnotes;
+
 if ($shv && isset($vpf)){ fclose($vpf); fclose($vtf); }
 
-echo '<p>&nbsp;</p>
+echo '<hr>
+<p>&nbsp;</p>
 <p>'.$neighbour_words.':
+<div id="neighbour_words">
 '.iconv($enc,'utf-8',$wlnx).'
-'.search_form().'
+</div>'.search_form().'
 <p>&nbsp;</p>
 
 <div class="bottom">
@@ -130,7 +138,13 @@ while ($i<$iend){
  if ($b!=$b0){ $r=$r."\n<p><b>".iconv($enc,'utf-8',$b)."</b>:"; }
  $r=$r."\n".' <a href="#" onclick="OpenVerse('.
     "$bk1,$ch1,$vr".');return false;">'."$ch1:$vr".'</a>';
- if ($shv){ $r=$r.' '.make_format(iconv($enc,'utf-8',bverse($c[$i]))).'<br>'; }
+ if ($shv){
+   $va = explode('$$',iconv($enc,'utf-8',bverse($c[$i])));
+   $vt = end($va);
+   $vt = fromt_verse($vt);
+   $vt = str_replace('¶','',$vt);
+   $r=$r.' '.make_format($vt).'<br>';
+ }
  else { $r=$r.', '; }
  $i++; $ch1--;
  $gi=$g;
@@ -158,7 +172,8 @@ function bwverses($w){ // връща номерата на стиховете, �
 global $cpf,$ccf,$wplace;
 $r=array();
 $wplace=bwindex($w);
-if ($w==bword($wplace,true)){
+$v=bword($wplace,true);
+if ($w==$v){
  $cp=fread4($cpf,$wplace*4);
  $cc=fread2($ccf,$cp*2);
  $a=fread($ccf,$cc*2);
@@ -171,12 +186,13 @@ return $r;
 }
 
 function bwindex($w0){ // връща номера който би имала думата $w0
-global $wcount,$hlang;
+global $wcount,$hlang,$enc;
+//$w0 = iconv($hlang->enc,$enc,$w0);
 $i1=0; $i2=$wcount-1;
 do {
  $i=round(($i1+$i2)/2);
  $w=bword($i,false);
- $c = $hlang->compare($w0,$w); // echo "$w0 $w $c<BR>";
+ $c = $hlang->compare($w0,$w);  //echo "$w0 $w $c<BR>";
  if ( $c > 0 ){ $i1=$i; } else { $i2=$i; }
 } while ($i2-$i1>1);
 $w1=bword($i1,false); $w2=bword($i2,false);
@@ -188,27 +204,30 @@ else {
 }
 
 function bword($i,$l){ // връща $i-тата дума, ако $l изписана с малки букви
-global $wpf,$wtf;
+global $wpf,$wtf,$enc;
 $wp=fread4($wpf,$i*4);
 fseek($wtf,$wp);
 $w=explode("\r",fread($wtf,64));
-if ($l){ return lc_word($w[0]); }
+if ($l){
+  if($enc=='utf-8') return mb_convert_case($w[0], MB_CASE_LOWER);
+  else return lc_word($w[0]);
+}
 else { return $w[0]; }
 }
 
 function sptlit_words($st){ // връща масив от думите в $st, изписани само с малки букви
 global $hlang,$enc;
-$st=iconv('utf-8',$enc,$st);
+$st=iconv('utf-8',$hlang->enc,$st);
 $r=array(); $w='';
 for($i=0;$i<strlen($st);$i++){
  $l=$hlang->lc_letter($st[$i]);
  if ($l>-1){ $w=$w.$l; }
  else { 
-  if ($w){ $r[]=$w; }
+  if ($w){ $r[]=iconv($hlang->enc,$enc,$w); }
   $w='';
  } 
 }
-if ($w){ $r[]=$w; }
+if ($w){ $r[]=iconv($hlang->enc,$enc,$w); }
 return $r;
 }
 
@@ -230,7 +249,10 @@ return ord($r[0])+256*ord($r[1]);
 function fread4($f,$p){ // чете четирибайтово цяло число от позиция $p на файл $f
 fseek($f,$p);
 $r=fread($f,4);
-return ord($r[0])+256*ord($r[1])+256*256*ord($r[2])+256*256*256*ord($r[3]);
+return ord($r[0])+
+       256*ord($r[1])+
+       256*256*ord($r[2])+
+       256*256*256*ord($r[3]);
 }
 
 

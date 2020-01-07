@@ -297,7 +297,9 @@ function onBodyScroll(e){
 }
 
 var max_sh = 0;
-function page_move(el,ev){
+var no_click = true;;
+function page_move(ev){
+    if(no_click) return;
     var dh = document.body.clientHeight;
     var ch = ev.pageY;
     var wh = window.innerHeight;
@@ -305,16 +307,30 @@ function page_move(el,ev){
     if(sh>max_sh) max_sh = sh;
     if(ch-sh<wh/4) window.scrollTo(0, sh - wh + 10);
     if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - 10);
+    setTimeout(do_page_move,100,sh);
+}
+
+function do_page_move(sh){
     var sh1 = window.scrollY;
     if(sh1>0 && sh1==sh) gonext();
     if(max_sh>0 && sh1==0 && sh1==sh) goprev();
+}
+
+
+function page_clicked(ev){
+no_click = false;
+setTimeout(page_move,300,ev);
+}
+
+function page_dblclicked(){
+no_click = true;
 }
 
 </script>
 
 </HEAD>
 
-<body onscroll="onBodyScroll(this);" onclick="page_move(this,event);"><div id="all_page">
+<body onscroll="onBodyScroll(this);" onclick="page_clicked(event);" ondblclick="page_dblclicked();"><div id="all_page">
 ';
 }
 

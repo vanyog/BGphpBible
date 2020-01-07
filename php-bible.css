@@ -6,6 +6,8 @@ body {
 
 span.note { color:green; }
 
+#neighbour_words p { display:inline-block; }
+
 #all_page { background-color: #ffffff; }
 
 input[type=button].right { float:right; margin-top: 2px; }

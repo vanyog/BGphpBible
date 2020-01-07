@@ -3,21 +3,23 @@
 $bnames=array(); $bn=0;
 
 if (file_exists($pth.'BibleTitles.txt')){
- $bnames=file($pth.'BibleTitles.txt'); // Четене на заглавията на книгите
- $bn=explode(' ',trim($bnames[0]));      // Брой на книгите в Библията
- $vcount=get_structure($bn,$pth);          // Масив, описващ структурата на Библията
+ $bnames=file($pth.'BibleTitles.txt'); // Р§РµС‚РµРЅРµ РЅР° Р·Р°РіР»Р°РІРёСЏС‚Р° РЅР° РєРЅРёРіРёС‚Рµ
+ $bn=explode(' ',trim($bnames[0]));      // Р‘СЂРѕР№ РЅР° РєРЅРёРіРёС‚Рµ РІ Р‘РёР±Р»РёСЏС‚Р°
+ $vcount=get_structure($bn,$pth);          // РњР°СЃРёРІ, РѕРїРёСЃРІР°С‰ СЃС‚СЂСѓРєС‚СѓСЂР°С‚Р° РЅР° Р‘РёР±Р»РёСЏС‚Р°
 }
 
-function get_structure($bn,$pth){ // Чете масива, описващ структурата на Библията
+function get_structure($bn,$pth){ // Р§РµС‚Рµ РјР°СЃРёРІР°, РѕРїРёСЃРІР°С‰ СЃС‚СЂСѓРєС‚СѓСЂР°С‚Р° РЅР° Р‘РёР±Р»РёСЏС‚Р°
+//if($pth=='Tzrg/'){ die(print_r($bn[0],true)); }
 $bstruct=file($pth.'BibleStructure.csv');
 $vcount=array();
 for($j=1;$j<=$bn[0];$j++){
+// $vcount[$bn[$j]]=explode(' ',trim($bstruct[$j-1]) );
  $vcount[$j]=explode(' ',trim($bstruct[$j-1]) );
 }
 return $vcount;
 }
 
-function vindex($bk,$ch,$vcount){ // пресмята индекса на първия стих на глава $ch от книга $bk
+function vindex($bk,$ch,$vcount){ // РїСЂРµСЃРјСЏС‚Р° РёРЅРґРµРєСЃР° РЅР° РїСЉСЂРІРёСЏ СЃС‚РёС… РЅР° РіР»Р°РІР° $ch РѕС‚ РєРЅРёРіР° $bk
 $vi=0;
 for($i=1;$i<=$bk;$i++){
  if ($i<$bk){ 
