@@ -91,6 +91,13 @@ echo '</select><input type="submit" value="'.$open_chapter.'"><input type="butto
 
 '.parallel_form();
 
+//Показване на формата за търсене и линк "Тълкувание"
+echo '<div id="search_block">
+'.search_form("right").'
+'.coment_link().'
+</div>
+';
+
 // Показване на заглавието на текста
 if ( is_array($bn) && (count($bn)>21) ){
  if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ echo iconv($enc,'utf-8',"<h1>$word_psalm &nbsp;$ch</h1>"); }
@@ -99,11 +106,7 @@ if ( is_array($bn) && (count($bn)>21) ){
   else echo "<h1>".iconv($enc,'utf-8',$hlang->encode($bnames[$bk]))."<br>$word_chapter &nbsp;$ch</h1>";
  }
 }
-else { echo "<P>$missing_files"; }
-
-//Показване на формата за търсене и линк "Тълкувание"
-echo search_form("right").'
-'.coment_link();
+else { echo "<p>$missing_files</p>"; }
 
 if ( is_array($bn) && (count($bn)>21) ){ // Изпълнява се ако версията съществува
 
@@ -144,8 +147,11 @@ fclose($tf);
 fclose($pf);
 
 if ($fnotes) 
-echo "\n".'<P>&nbsp;
-<hr>
+echo "\n".'<div class="bottom">
+<input type="button" value="'.$prev_chapter.'" onclick="goprev();">
+<input type="BUTTON" value="'.$next_chapter.'" class="right" onclick="gonext();">
+<p style="clear:both;"></p>
+</div>
 <a id="fnotes"></a>'.$fnotes;
 
 }
@@ -259,7 +265,7 @@ cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($nxbk-1).'";
 document.b_open.book.value="'.($nxbk).'";
 document.b_open.chapter.selectedIndex='.($nxch-1).';
-document.b_open.submit();
+setTimeout(function(){ document.b_open.submit(); }, 250);
 }
 
 function goprev(){
@@ -268,7 +274,7 @@ document.b_open.book.selectedIndex="'.($prbk-1).'";
 document.b_open.book.value="'.($prbk).'";
 bookchange();
 document.b_open.chapter.selectedIndex='.($prch-1).';
-document.b_open.submit();
+setTimeout(function(){ document.b_open.submit(); }, 250);
 }
 
 function changever(){

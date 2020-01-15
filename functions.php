@@ -32,8 +32,8 @@ return '<td class="panel">'.$word_project.'
 }
 
 function parallel_form(){
-global $pth,$bk,$ch;
-return '<FORM METHOD="POST" ACTION="parallel.php" NAME="b_parallel">
+global $pth,$bk,$ch,$form_metod;
+return '<FORM METHOD="'.$form_metod.'" ACTION="parallel.php" NAME="b_parallel">
 <INPUT TYPE="HIDDEN" NAME="version" VALUE="'.$pth.'">
 <INPUT TYPE="HIDDEN" NAME="book" VALUE="'.$bk.'">
 <INPUT TYPE="HIDDEN" NAME="chapter" VALUE="'.$ch.'">

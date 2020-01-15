@@ -2,6 +2,7 @@ body {
  font-family: "Arial", Sans-Serif; 
  font-size: 14pt;
  background-color:#939393;
+ margin:0;
 }
 
 span.note { color:green; }
@@ -14,7 +15,7 @@ input[type=button].right { float:right; margin-top: 2px; }
 input, select, #about_link { font-size:75%; overflow:hidden; display:inline-block; white-space:nowrap; vertical-align: middle; }
 #about_link { padding:0 10px; }
 
-@media only screen and (max-width: 926px) {
+@media only screen and (max-width: 955px) {
 select { max-width:14.29%; }
 }
 
@@ -26,12 +27,14 @@ input { max-width:calc(14.29% - 1px); }
 #about_link { max-width:calc(14.29% - 20px); }
 }
 
+#search_block { display:block; float:right; max-width:100%; }
+
 form, .bottom { background-color: #E1E1E1; padding:5px; font-size:75%; }
 .bottom input { font-size:100%; max-width:initial; margin-right: 10px; }
 form { font-size:100%; }
 form[name=b_parallel], form[name=b_open], form[name=f1] { padding:0; }
 form[name=b_search] { background-color: #ffffff; }
-form[name=b_search] input { max-width:calc(100% - 8px); }
+form[name=b_search] input { max-width:calc(78vw - 50px); }
 
 form[name=showv] { display:inline-block; float:right; }
 

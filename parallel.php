@@ -103,7 +103,7 @@ else $bk1=array_search( $bk,array_slice($bn1,1),true );
 if ($bk1===false) // ако няма такава книга
 { $vt=''; $bn3=''; $bk1=1; $vr=''; }
 else {
- $bk++;
+ $bk1++;
  // определяне индакса на стиха
  $vi=vindex($bk1,$ch,get_structure($bn0,$p))+$vr-1;
  // четене на стиха $vt;
