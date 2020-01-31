@@ -147,7 +147,7 @@ fclose($tf);
 fclose($pf);
 
 if ($fnotes) 
-echo "\n".'<div class="bottom">
+echo "\n".'<div class="bottom" id="mbtns">
 <input type="button" value="'.$prev_chapter.'" onclick="goprev();">
 <input type="BUTTON" value="'.$next_chapter.'" class="right" onclick="gonext();">
 <p style="clear:both;"></p>
@@ -296,7 +296,7 @@ document.b_parallel.submit();
 cookie_set("version","'.$pth.'");
 cookie_set("book","'.$bk.'");
 cookie_set("chapter","'.$ch.'");
-cookie_set("verse","'.$vr.'");
+//cookie_set("verse","'.$vr.'");
 
 function onBodyScroll(e){
    cookie_set("bscrollY",e.scrollY);
@@ -305,6 +305,7 @@ function onBodyScroll(e){
 var max_sh = 0;
 var no_click = true;;
 function page_move(ev){
+    var bb = document.getElementById("mbtns");
     if(no_click) return;
     var dh = document.body.clientHeight;
     var ch = ev.pageY;
@@ -313,7 +314,7 @@ function page_move(ev){
     if(sh>max_sh) max_sh = sh;
     if(ch-sh<wh/4) window.scrollTo(0, sh - wh + 10);
     if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - 10);
-    setTimeout(do_page_move,100,sh);
+    if(ch<bb.offsetTop) setTimeout(do_page_move,100,sh);
 }
 
 function do_page_move(sh){
