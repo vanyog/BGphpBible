@@ -109,7 +109,7 @@ global $findex,$fnotes,$enc;
 $findex++;
 $fnotes.="\n".'<p><span class="fnotes"><sup>'.$findex.'</sup></span> '.
          iconv($enc,'utf-8//IGNORE',make_format($a[1]));
-return '<a href="#fnotes" class="fnotes"><sup>'.$findex.'</sup></a>';
+return '<a href="#fnotes" class="fnotes" onclick="to_anchor = true;"><sup>'.$findex.'</sup></a>';
 }
 
 function make_format($vt){

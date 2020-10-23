@@ -38,9 +38,10 @@ form[name=b_search] input { max-width:calc(78vw - 50px); }
 
 form[name=showv] { display:inline-block; float:right; }
 
-h1 { font-size: 140%; margin-left:10pt; }
-h2 { font-size: 120%; margin-left:10pt; }
-h3 { font-size: 110%; margin-left:10pt; }
+h1,#h1c { font-size: 120%; margin: 36px 0 0 0; padding: 10px; background-color:#ffffff; width:calc(100% - 20px); }
+#h1c { font-weight: bold; margin-top:0; position:fixed; top:0; visibility: hidden; }
+h2 { font-size: 110%; margin-left:10pt; }
+h3 { font-size: 105%; margin-left:10pt; }
 
 p { margin: 0 10pt; }
 p.bigpar { text-indent: 2em; margin-bottom: 0.5em; }

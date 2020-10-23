@@ -100,10 +100,15 @@ echo '<div id="search_block">
 
 // Показване на заглавието на текста
 if ( is_array($bn) && (count($bn)>21) ){
- if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ echo iconv($enc,'utf-8',"<h1>$word_psalm &nbsp;$ch</h1>"); }
+ $h1 = '';
+ if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ $h1 = iconv($enc,'utf-8',"$word_psalm &nbsp;$ch"); }
  else {
   if ($bk>$bn[0]) echo "<p>$missing_book";
-  else echo "<h1>".iconv($enc,'utf-8',$hlang->encode($bnames[$bk]))."<br>$word_chapter &nbsp;$ch</h1>";
+  else $h1 =  iconv($enc,'utf-8',$hlang->encode($bnames[$bk]))." - $word_chapter &nbsp;$ch";
+ }
+ if($h1){
+   echo "<h1 id=\"h1\">$h1</h1>\n";
+   echo "<div id=\"h1c\">$h1</div>";
  }
 }
 else { echo "<p>$missing_files</p>"; }
@@ -146,6 +151,7 @@ for ($i=0;$i<$cvc;$i++){
 fclose($tf);
 fclose($pf);
 
+// Показване на бележки под линия
 if ($fnotes) 
 echo "\n".'<div class="bottom" id="mbtns">
 <input type="button" value="'.$prev_chapter.'" onclick="goprev();">
@@ -260,12 +266,14 @@ function bookchange(){
  }
 }
 
+var no_move = false;
+
 function gonext(){
 cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($nxbk-1).'";
 document.b_open.book.value="'.($nxbk).'";
 document.b_open.chapter.selectedIndex='.($nxch-1).';
-setTimeout(function(){ document.b_open.submit(); }, 250);
+document.b_open.submit();
 }
 
 function goprev(){
@@ -274,7 +282,7 @@ document.b_open.book.selectedIndex="'.($prbk-1).'";
 document.b_open.book.value="'.($prbk).'";
 bookchange();
 document.b_open.chapter.selectedIndex='.($prch-1).';
-setTimeout(function(){ document.b_open.submit(); }, 250);
+document.b_open.submit();
 }
 
 function changever(){
@@ -299,22 +307,34 @@ cookie_set("chapter","'.$ch.'");
 //cookie_set("verse","'.$vr.'");
 
 function onBodyScroll(e){
+   var h1c = document.getElementById("h1c");
+   var h1  = document.getElementById("h1");
+   var hh = h1.offsetTop;
+   var sh = window.scrollY;
+   if(sh > hh){
+      h1c.style.visibility = "visible";
+   }
+   else {
+      h1c.style.visibility = "hidden";
+   }
    cookie_set("bscrollY",e.scrollY);
 }
 
 var max_sh = 0;
-var no_click = true;;
+var no_click = true;
 function page_move(ev){
-    var bb = document.getElementById("mbtns");
     if(no_click) return;
-    var dh = document.body.clientHeight;
+    var bb = document.getElementById("mbtns");
     var ch = ev.pageY;
+    if(ch<bb.offsetTop) do_page_move(sh);
+    var dh = document.body.clientHeight;
     var wh = window.innerHeight;
     var sh = window.scrollY;
     if(sh>max_sh) max_sh = sh;
-    if(ch-sh<wh/4) window.scrollTo(0, sh - wh + 10);
-    if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - 10);
-    if(ch<bb.offsetTop) setTimeout(do_page_move,100,sh);
+    var dd = document.getElementById("h1c");
+    dd = dd.offsetHeight + 10;
+    if(ch-sh<wh/4) window.scrollTo(0, sh - wh + dd);
+    if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - dd);
 }
 
 function do_page_move(sh){
@@ -323,10 +343,11 @@ function do_page_move(sh){
     if(max_sh>0 && sh1==0 && sh1==sh) goprev();
 }
 
-
+var to_anchor = false;
 function page_clicked(ev){
 no_click = false;
-setTimeout(page_move,300,ev);
+if(!to_anchor) setTimeout(page_move,300,ev);
+to_anchor = false;
 }
 
 function page_dblclicked(){
@@ -361,7 +382,7 @@ return $r;
 <div>
 <script>
 var bscrollY = cookie_value("bscrollY");
-window.scrollTo(0, cookie_value("bscrollY"));
+window.scrollTo(0, bscrollY);
 </script>
 </body>
 </html>
