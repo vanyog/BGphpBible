@@ -50,9 +50,9 @@ foreach($vpth as $p) if (!in_array($p,array_keys($on_other_sites))) parallel($p)
 
 // Показване на бележките под линия
 if ($fnotes) 
-echo "\n".'<P>&nbsp;
+echo "\n".'<p id="fnotes">&nbsp;
 <hr>
-<A NAME="fnotes"></A>'.$fnotes;
+'.$fnotes.'</p>';
 
 echo '</DIV>
 <div class="bottom">
@@ -110,7 +110,8 @@ else {
  $pf=fopen($p.'CompactPoint.bin','r');
  $tf=fopen($p.'CompactText.bin','r');
  $hlang->__construct(version_languege($p));
- $va = explode('$$',read_verse($enc,$pf,$tf,$vi));
+ $vt = read_verse($enc,$pf,$tf,$vi);
+ $va = explode('$$',$vt);
  $vt = end($va);
  $vt = iconv($enc,'utf-8',$vt);
  $vt = str_replace('¶','',$vt);

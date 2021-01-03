@@ -33,8 +33,8 @@ form, .bottom { background-color: #E1E1E1; padding:5px; font-size:75%; }
 .bottom input { font-size:100%; max-width:initial; margin-right: 10px; }
 form { font-size:100%; }
 form[name=b_parallel], form[name=b_open], form[name=f1] { padding:0; }
-form[name=b_search] { background-color: #ffffff; }
-form[name=b_search] input { max-width:calc(78vw - 50px); }
+form[name=b_search] { background-color: #ffffff; display:inline-block; }
+form[name=b_search] input { max-width:calc(78vw - 105px); }
 
 form[name=showv] { display:inline-block; float:right; }
 
@@ -44,6 +44,7 @@ h2 { font-size: 110%; margin-left:10pt; }
 h3 { font-size: 105%; margin-left:10pt; }
 
 p { margin: 0 10pt; }
+p.sr { margin: 0 10pt 10pt 10pt; }
 p.bigpar { text-indent: 2em; margin-bottom: 0.5em; }
 
 a { text-decoration:none; }
@@ -93,3 +94,5 @@ a:hover.w { color: #FFD9D9; }
 a:hover.prl{  background-color:#939393; color:white; }
 
 .w200 {width:160pt;}
+
+.found { background-color:#b6e6b6; padding:0 0.25em; }

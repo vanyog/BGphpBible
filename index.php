@@ -93,6 +93,7 @@ echo '</select><input type="submit" value="'.$open_chapter.'"><input type="butto
 
 //Показване на формата за търсене и линк "Тълкувание"
 echo '<div id="search_block">
+'.audio($pth, $bk, $ch).'
 '.search_form("right").'
 '.coment_link().'
 </div>
@@ -101,7 +102,7 @@ echo '<div id="search_block">
 // Показване на заглавието на текста
 if ( is_array($bn) && (count($bn)>21) ){
  $h1 = '';
- if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ $h1 = iconv($enc,'utf-8',"$word_psalm &nbsp;$ch"); }
+ if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ $h1 = "$word_psalm &nbsp;$ch"; }
  else {
   if ($bk>$bn[0]) echo "<p>$missing_book";
   else $h1 =  iconv($enc,'utf-8',$hlang->encode($bnames[$bk]))." - $word_chapter &nbsp;$ch";
@@ -326,7 +327,7 @@ function page_move(ev){
     if(no_click) return;
     var bb = document.getElementById("mbtns");
     var ch = ev.pageY;
-    if(ch<bb.offsetTop) do_page_move(sh);
+    if(bb && (ch<bb.offsetTop)) do_page_move(sh);
     var dh = document.body.clientHeight;
     var wh = window.innerHeight;
     var sh = window.scrollY;

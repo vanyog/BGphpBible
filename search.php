@@ -22,7 +22,7 @@ $aprt=500; if ($shv){ $aprt=50; }         // брой стихове, покад
 
 include("structure.php");
 
-Start_page(); // показва началото на страницата
+Start_page(); //die(print_r($version[$pth],true));// показва началото на страницата
 
 //Отваряне на файловете
 $wpf=fopen($pth.'WordPoint.bin','r');
@@ -68,12 +68,12 @@ if (count($c)){
 }
 else { echo "<P>$not_found"; }
 
-echo list_to_text($c);
+echo markWords( list_to_text($c) );
 
 if ($shv && $fnotes)
-echo "\n".'<P>&nbsp;
+echo "\n".'<p id="fnotes">&nbsp;
 <hr>
-<a id="fnotes"></a>'.$fnotes;
+'.$fnotes.'</p>';
 
 if ($shv && isset($vpf)){ fclose($vpf); fclose($vtf); }
 
@@ -95,6 +95,18 @@ echo '<hr>
 ';
 
 //---------функции----------
+
+function markWords($t){// отбелязва потърсените думи в цвят
+global $wrd,$pth;
+$enc=version_encoding($pth);
+$wr = array();
+foreach($wrd as $i=>$w) $wr[$i] = ''.iconv($enc,'utf-8//IGNORE',$w).'';
+$p = '/\b('.implode('|', $wr).')\b/ui';
+$a = array();
+preg_match_all($p, $t, $a);
+//die("$p<br>".print_r($a,true));
+return preg_replace($p, '<span class="found">${1}</span>', $t);
+}
 
 function bnwords($i){ // връща няколко думи около последната потърсена дума
 global $wcount,$wplace,$before,$after;
@@ -135,13 +147,14 @@ while ($i<$iend){
  $b0=$b;
  $b =rtrim($bnames[count($vcount)+$bk1]);
  $b1=rtrim($bnames[2*count($vcount)+$bk1]);
- if ($b!=$b0){ $r=$r."\n<p><b>".iconv($enc,'utf-8',$b)."</b>:"; }
+ if ($b!=$b0){ $r=$r."\n<p class=\"sr\"><b>".iconv($enc,'utf-8',$b)."</b>:"; }
  $r=$r."\n".' <a href="#" onclick="OpenVerse('.
     "$bk1,$ch1,$vr".');return false;">'."$ch1:$vr".'</a>';
  if ($shv){
-   $va = explode('$$',iconv($enc,'utf-8',bverse($c[$i])));
+   $va = explode('$$',bverse($c[$i]));
    $vt = end($va);
    $vt = fromt_verse($vt);
+   $vt = iconv($enc,'utf-8',$vt);
    $vt = str_replace('¶','',$vt);
    $r=$r.' '.make_format($vt).'<br>';
  }
@@ -257,7 +270,7 @@ return ord($r[0])+
 
 
 function Start_page(){
-global $pth,$enc,$bk,$ch,$sst,$search_result_for,$word_bible,$form_metod;
+global $version,$pth,$enc,$bk,$ch,$sst,$search_result_for,$word_bible,$form_metod;
 echo '<!DOCTYPE html>
 <html lang="bg">
 
@@ -309,7 +322,7 @@ function ShowWithV(){
 <div id="all_page">
 <p>'.$search_result_for.': "<b>'.$sst.'</b>":
 <p>&nbsp;<br>
-<A HREF="" onclick="javascript:document.f1.submit();return false;"><B>'.$word_bible.'</B></A>&nbsp;&nbsp;
+<A HREF="" onclick="javascript:document.f1.submit();return false;"><B>'.$version[$pth].'</B></A>&nbsp;&nbsp;
 ';
 }
 

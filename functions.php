@@ -2,6 +2,7 @@
 
 include("functions-$language.php");
 
+$fnotes = '';
 $input_data=array(); // масив за входни данни
 check_for_get_data(); // установяване на входните данни, ако са изпратени с GET метод
 
@@ -25,7 +26,7 @@ global $apth,$pth,$about_version;
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
 return '<td class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.0.1</a>,</b>
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.0.3</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
 </td>';
@@ -92,7 +93,8 @@ $vp=read_vpos($pf,$vi);
 if ($vp!=4294967295){
  fseek($tf,$vp);
  $vl=fread($tf,2); $vl=ord($vl[0])+ord($vl[1])*256;
- $vt=decode(fread($tf,$vl)); //die($vt);
+ $vt=decode(fread($tf,$vl));
+ $GLOBALS['enc'] = $enc;
  $vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
 }
 return make_format($vt);
@@ -104,7 +106,6 @@ return make_format($vt);
 }
 
 function replace_notes($a){
-//die(print_r($a,true));
 global $findex,$fnotes,$enc;
 $findex++;
 $fnotes.="\n".'<p><span class="fnotes"><sup>'.$findex.'</sup></span> '.
@@ -175,6 +176,14 @@ switch ($pth) {
 case 'BL/': case 'Tzrg/': case 'Ru/': return true; break;
 default: return false;
 }
+}
+
+function audio($pth, $bk, $ch){
+$p = __DIR__."/$pth"."audio.php";// die($p);
+if(!file_exists($p)) return;
+include_once($p);
+$lk = audio_link($bk, $ch);
+if($lk) return '<a href="'.$lk.'" target="_blank">audio</a>';
 }
 
 ?>
