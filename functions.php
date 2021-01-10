@@ -5,6 +5,7 @@ include("functions-$language.php");
 $fnotes = '';
 $input_data=array(); // масив за входни данни
 check_for_get_data(); // установяване на входните данни, ако са изпратени с GET метод
+$last_bk=1; // Последната разпизната в препратка книга. 
 
 function a_path($p){
 if (strpos($_SERVER['SERVER_SOFTWARE'],'(Win32)'))
@@ -26,7 +27,7 @@ global $apth,$pth,$about_version;
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
 return '<td class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.0.3</a>,</b>
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.1.0</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
 </td>';
@@ -87,7 +88,6 @@ else
 }
 
 function read_verse($enc,$pf,$tf,$vi){
-//global $findex,$fnotes;
 $vt='';
 $vp=read_vpos($pf,$vi);
 if ($vp!=4294967295){
@@ -106,11 +106,37 @@ return make_format($vt);
 }
 
 function replace_notes($a){
+$a[1] = make_links($a[1]);
 global $findex,$fnotes,$enc;
 $findex++;
 $fnotes.="\n".'<p><span class="fnotes"><sup>'.$findex.'</sup></span> '.
          iconv($enc,'utf-8//IGNORE',make_format($a[1]));
 return '<a href="#fnotes" class="fnotes" onclick="to_anchor = true;"><sup>'.$findex.'</sup></a>';
+}
+
+function make_links($a){
+$parts = preg_split('/,|;/',$a);
+foreach($parts as $i=>$p) $parts[$i] = make_link($p);
+return implode(', ',$parts);
+}
+
+function make_link($p){
+global $bnames, $bn, $pt0, $pth, $last_bk, $enc;
+$a = array();
+if(!preg_match_all('/(.*?)\s(\d+):(\d+)/', $p, $a)) return $p;
+$gl = iconv('utf-8',$enc,'гл.');
+$st = iconv('utf-8',$enc,'ст.');
+if(empty($a[1][0])) $bk = $last_bk;
+else if(trim($a[1][0])==$gl) $bk = $GLOBALS['bk'];
+else {
+  $bk = $bn[0] * 2 + 1;
+  while( (trim($bnames[$bk])!=trim($a[1][0])) && ($bk<3*$bn[0]) ) $bk++;
+  if(trim($bnames[$bk])!=trim($a[1][0])){ return $p; }
+  $bk = $bk - $bn[0] * 2;
+}
+$lk = $_SERVER['PHP_SELF']."?cversion=$pt0&version=$pth&book=$bk&chapter=".$a[2][0]."&verse=".$a[3][0]."#".$a[3][0];
+$last_bk = $bk;
+return "<a href=\"$lk\">$p</a>";
 }
 
 function make_format($vt){
@@ -179,11 +205,13 @@ default: return false;
 }
 
 function audio($pth, $bk, $ch){
-$p = __DIR__."/$pth"."audio.php";// die($p);
+$p = __DIR__."/$pth"."audio.php";
 if(!file_exists($p)) return;
 include_once($p);
 $lk = audio_link($bk, $ch);
-if($lk) return '<a href="'.$lk.'" target="_blank">audio</a>';
+if($lk) return '<a href="'.$lk.'" target="_blank">'.
+               '<img src="images/speaker.png" alt="audio" title="Щракнете за да чуете прочит на тази глава">'.
+               '</a>';
 }
 
 ?>

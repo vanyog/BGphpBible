@@ -28,6 +28,7 @@ input { max-width:calc(14.29% - 1px); }
 }
 
 #search_block { display:block; float:right; max-width:100%; }
+#search_block img { vertical-align:middle; } 
 
 form, .bottom { background-color: #E1E1E1; padding:5px; font-size:75%; }
 .bottom input { font-size:100%; max-width:initial; margin-right: 10px; }

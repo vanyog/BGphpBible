@@ -31,7 +31,6 @@ include_once("hlanguage.php");                     // Зарежда обект�
 $bk=posted('book',cookie_or('book',1));       // Номер на текущата книга
 $ch=posted('chapter',cookie_or('chapter',1)); // Номер на текущата глава
 $vr=posted('verse',cookie_or('verse',0));     // Номер на текущия стих
-//die("$pth, $bk, $ch, $vr");
 $apth=a_path($pth);           // Абсолютната директория с файловете на Библията
 include("structure.php");     // Зарежда описанието на структурата на Библията
 $shv=1; // Да се показват цели стихове в резултата от търсенето
@@ -176,8 +175,8 @@ echo '<p>&nbsp;</p>
 
 //--------ФУНКЦИИ-----------
 
-function cookie_or($n, $v){//die(print_r($_COOKIE,true));
-if(isset($_COOKIE[$n])) return $_COOKIE[$n];
+function cookie_or($n, $v){
+if(isset($_COOKIE[$n]) && (is_numeric($v)===is_numeric($_COOKIE[$n]))) return $_COOKIE[$n];
 else return $v;
 }
 
