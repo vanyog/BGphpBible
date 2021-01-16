@@ -85,6 +85,7 @@ for ($i=1;$i<(is_array($vcount[$bk])?count($vcount[$bk]):0);$i++){
  if ($i==$ch){ echo "\n<option selected>"; } else { echo "\n<option>"; }
  echo $i; 
 }
+if(!isset($vcount[$bk])) echo "\n<option selected>1";
 echo '</select><input type="submit" value="'.$open_chapter.'"><input type="button" value="'.$next_chapter.'" class="right" onclick="gonext();">
 </form>
 
@@ -194,8 +195,7 @@ if($ch==1){
   $nxch=2;
 }
 if(empty($vcount[$bk])) return '';
-if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1)) ){
-  $prbk=$bk;
+if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1))  ){
   $prch=$ch-1;
   $nxbk=$bk+1;
   if ($nxbk>(count($vcount)-1)){ $nxbk=1; }
@@ -204,19 +204,22 @@ if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1)) ){
 }
 
 function pagehead(){
-global $on_other_sites,$version,$pth,$bk,$ch,$vr,$vcount,$nxbk,$nxch,$prbk,$prch,$cookie_message;
+global $on_other_sites, $version, $pth, $bk, $ch, $vr, $vcount, $nxbk, $nxch, $prbk, $prch, $cookie_message, $image;
 determinenextandprev();
 echo '<!DOCTYPE html>
 <html lang="bg">
 
 <HEAD>
-  <TITLE>Библията на български - php реализация</TITLE>
+  <TITLE>'.$version[$pth].' - проект BGphpBible</TITLE>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:type" content="article">
   <meta property="fb:app_id" content="1350744361603908">
-  <meta property="og:url" content="http://vanyog.com/bible/php">
-  <meta property="og:image" content="http://vanyog.com/bible/php/images/chetveroevangelie.jpg">
-  <meta property="og:title" content="Библия - онлайн на български и др. езици">
+  <meta property="og:url" content="http://vanyog.com'.$_SERVER['REQUEST_URI'].'">
+  <meta property="og:image" content="http://vanyog.com/bible/php/';
+if(isset($image[$pth])) echo $pth.$image[$pth];
+else echo 'images/chetveroevangelie.jpg';
+echo '">
+  <meta property="og:title" content="'.$version[$pth].' - проект BGphpBible">
   <meta property="og:description" content="Библията; търсене в Библията; php скриптове с отворен код за представяне на Библията върху отдалечен или локален сървър.">
   <link rel="shortcut icon" sizes="192x192" href="images/web-icon-1.png">
   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
@@ -281,7 +284,7 @@ cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($prbk-1).'";
 document.b_open.book.value="'.($prbk).'";
 bookchange();
-document.b_open.chapter.selectedIndex='.($prch-1).';
+document.b_open.chapter.selectedIndex='.(($prch<1)?0:$prch-1).';
 document.b_open.submit();
 }
 
@@ -312,6 +315,8 @@ function onBodyScroll(e){
    var hh = h1.offsetTop;
    var sh = window.scrollY;
    if(sh > hh){
+      var w = document.getElementsByTagName("body")[0].offsetWidth - 20;
+      h1c.style.width = w + "px";
       h1c.style.visibility = "visible";
    }
    else {
