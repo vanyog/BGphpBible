@@ -2,7 +2,7 @@
 
 include("functions-$language.php");
 
-$fnotes = '';
+$fnotes = ''; // Бележки под линию
 $input_data=array(); // масив за входни данни
 check_for_get_data(); // установяване на входните данни, ако са изпратени с GET метод
 $last_bk=1; // Последната разпизната в препратка книга. 
@@ -26,11 +26,11 @@ global $apth,$pth,$about_version;
 
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
-return '<td class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.1.1</a>,</b>
+return '<span class="panel">'.$word_project.'
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.2.0</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
-</td>';
+</span>';
 }
 
 function parallel_form(){
@@ -87,6 +87,8 @@ else
 { return $v; }
 }
 
+// Четене на стих
+
 function read_verse($enc,$pf,$tf,$vi){
 $vt='';
 $vp=read_vpos($pf,$vi);
@@ -95,6 +97,7 @@ if ($vp!=4294967295){
  $vl=fread($tf,2); $vl=ord($vl[0])+ord($vl[1])*256;
  $vt=decode(fread($tf,$vl));
  $GLOBALS['enc'] = $enc;
+ // Обрботване на бележктите под линия и препратките, заградени с {} 
  $vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
 }
 return make_format($vt);
@@ -106,8 +109,9 @@ return make_format($vt);
 }
 
 function replace_notes($a){
+global $findex, $fnotes, $enc, $sreader;
+if($sreader) return '';
 $a[1] = make_links($a[1]);
-global $findex,$fnotes,$enc;
 $findex++;
 $fnotes.="\n".'<p><span class="fnotes"><sup>'.$findex.'</sup></span> '.
          iconv($enc,'utf-8//IGNORE',make_format($a[1]));
@@ -205,8 +209,11 @@ default: return false;
 }
 
 function audio($pth, $bk, $ch){
+global $pt0;
 $p = __DIR__."/$pth"."audio.php";
-if(!file_exists($p)) return;
+if(!file_exists($p)) return 
+'<a href="index.php?cversion='.$pt0.'&version='.$pth.'&book='.$bk.'&chapter='.$ch.'&listen=on">
+<img src="images/ear1.png" alt="screen read" title="Вид на текста за екранен четец"><a>';
 include_once($p);
 $lk = audio_link($bk, $ch);
 if($lk) return '<a href="'.$lk.'" target="_blank">'.

@@ -36,6 +36,8 @@ include("structure.php");     // Зарежда описанието на стр
 $shv=1; // Да се показват цели стихове в резултата от търсенето
 $fnotes=''; // Бележки под линия
 $findex=0;  // Номер на бележката под линия
+// Флаг за вид на текста за екранен четец
+$sreader = isset($_GET['listen']) && ($_GET['listen']=='on');
 $pstyle=para_style($pth);
 
 // Ако се сменя версията, се коригират номерата на стиховете, за да си съответстват по смисъл
@@ -51,9 +53,12 @@ header("Content-Type: text/html; charset=utf-8");
 
 pagehead(); // Изпращане <HEAD>...</HEAD> частта на страницата
 
+if(!$sreader){
+
 echo '<form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
-<input type="button" value="'.$prev_chapter.'" onclick="goprev();">'.
+'.prev_chapter_link().'
+'.
 about_version();
 
 // Показване на select елемента за избор на Версия
@@ -86,7 +91,7 @@ for ($i=1;$i<(is_array($vcount[$bk])?count($vcount[$bk]):0);$i++){
  echo $i; 
 }
 if(!isset($vcount[$bk])) echo "\n<option selected>1";
-echo '</select><input type="submit" value="'.$open_chapter.'"><input type="button" value="'.$next_chapter.'" class="right" onclick="gonext();">
+echo '</select><input type="submit" value="'.$open_chapter.'">'.next_chapter_link().'
 </form>
 
 '.parallel_form();
@@ -99,13 +104,15 @@ echo '<div id="search_block">
 </div>
 ';
 
+}
+
 // Показване на заглавието на текста
 if ( is_array($bn) && (count($bn)>21) ){
  $h1 = '';
  if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ $h1 = "$word_psalm &nbsp;$ch"; }
  else {
   if ($bk>$bn[0]) echo "<p>$missing_book";
-  else $h1 =  iconv($enc,'utf-8',$hlang->encode($bnames[$bk]))." - $word_chapter &nbsp;$ch";
+  else $h1 =  iconv($enc,'utf-8',$hlang->encode($bnames[$bk]))." - <span>$word_chapter &nbsp;$ch</span>";
  }
  if($h1){
    echo "<h1 id=\"h1\">$h1</h1>\n";
@@ -135,14 +142,16 @@ for ($i=0;$i<$cvc;$i++){
  }
  $i1=$i+1;
  echo iconv($enc,'utf-8',$bf);
- $bl='<p '; $ct = "</p>\n";
- if ($vr==$i1){ $bl.='class="averse" id="'.$i1.'">'; }
+ $bl='<p '; 
+ $ct = "</p>\n";
+ if ($vr==$i1){ $bl.='class="averse" id="'.$i1.'">'; } // Оцветяване на текущия стих
  else { $bl.='id="'.$i1.'">'; }
  if (!$pstyle && $i1<10) $bl=$bl.'&nbsp; ';
  if(iconv($enc,'utf-8',mb_substr($vt,0,1))=='¶')
       { $bl = '<p class="bigpar"><span'.substr($bl,2); $ct="</span>\n"; $vt = mb_substr($vt,1); }
  else if($pstyle) { $bl = '<span'.substr($bl,2); $ct="</span>\n"; }
- $bl=$bl.'<a href="#" title="'.$word_parallel.
+ // Номер на стиха
+ if(!$sreader) $bl=$bl.'<a href="#" title="'.$word_parallel.
      '" class="prl" onclick="parallel('.$i.','.($vi+$i).');return false;">'.
      $i1.'</a> ';
  if ($vt) echo "$bl".iconv($enc,'utf-8//IGNORE',$vt).$ct;
@@ -153,22 +162,27 @@ fclose($tf);
 fclose($pf);
 
 // Показване на бележки под линия
-if ($fnotes) 
-echo "\n".'<div class="bottom" id="mbtns">
-<input type="button" value="'.$prev_chapter.'" onclick="goprev();">
-<input type="BUTTON" value="'.$next_chapter.'" class="right" onclick="gonext();">
+if ($fnotes && !$sreader) 
+   echo "\n".'<div class="bottom" id="mbtns">
+'.prev_chapter_link().'
+'.next_chapter_link().'
 <p style="clear:both;"></p>
 </div>
 <a id="fnotes"></a>'.$fnotes;
 
+if($sreader)
+   echo "\n".'
+<p><br><a href="index.php?cversion='.$pt0.'&version='.$pth.'&book='.$bk.'&chapter='.$ch.'">Тази глава в нормален вид</a></p>
+<p style="clear:both;"></p>';
+
 }
 
 //Показване на долните бутони
-echo '<p>&nbsp;</p>
+if(!$sreader) echo '<p>&nbsp;</p>
 <div class="bottom">
-<input type="button" value="'.$prev_chapter.'" onclick="goprev();">
+'.prev_chapter_link().'
 '.about_the_project().'
-<input type="BUTTON" value="'.$next_chapter.'" class="right" onclick="gonext();">
+'.next_chapter_link().'
 <p style="clear:both;"></p>
 </div>
 ';
@@ -367,6 +381,18 @@ no_click = true;
 ';
 }
 
+function prev_chapter_link(){
+global $pt0, $pth, $prev_chapter, $prbk, $prch;
+return '<a class="button" href="index.php?cversion='.$pt0.
+       '&version='.$pth.'&book='.$prbk.'&chapter='.$prch.'" onclick="goprev();">'.$prev_chapter.'</a>';
+}
+
+function next_chapter_link(){
+global $pt0, $pth, $next_chapter, $nxbk, $nxch;
+return '<a class="button right" href="index.php?cversion='.$pt0.
+       '&version='.$pth.'&book='.$nxbk.'&chapter='.$nxch.'" onclick="gonext();">'.$next_chapter.'</a>';
+}
+
 function coment_link(){
 global $pth,$bk,$bnames,$bn,$ch;
 $r='';
@@ -384,7 +410,7 @@ return $r;
 }
 
 ?>
-<div>
+</div>
 <script>
 var bscrollY = cookie_value("bscrollY");
 window.scrollTo(0, bscrollY);
