@@ -22,7 +22,7 @@ $aprt=500; if ($shv){ $aprt=50; }         // брой стихове, покад
 
 include("structure.php");
 
-Start_page(); // показва началото на страницата
+Start_page(); //die(print_r($version[$pth],true));// показва началото на страницата
 
 //Отваряне на файловете
 $wpf=fopen($pth.'WordPoint.bin','r');

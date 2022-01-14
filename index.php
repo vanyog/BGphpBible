@@ -423,7 +423,5 @@ return $r;
 
 ?>
 </div>
-<script>
-</script>
 </body>
 </html>

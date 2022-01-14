@@ -1,4 +1,5 @@
 .DS_Store
+*.zip
 38
 ASv
 BL
@@ -9,4 +10,4 @@ Ort
 Ru
 Tzrg
 Veren
-_options.php
+BL
