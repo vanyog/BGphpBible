@@ -25,33 +25,40 @@ var $lc_l = array();
 var $uc_l = array();
 var $sro = array();
 var $id = '';
+var $enc = '';
 
-function HLanguage($hl){
+function __construct($hl){
  $this->id=$hl;
  switch ($hl){
   case 'en0': // àíãëèéñêè + ÷èñëà
    $lc='0123456789abcdefghijklmnopqrstuvwxyz';
    $uc='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+   $this->enc='ISO-8859-1';
    break;
   case 'bg': // áúëãàğñêè
    $lc='àáâãäåæçèéêëìíîïğñòóôõö÷øùúüşÿ';
    $uc='ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÜŞß';
+   $this->enc = "windows-1251";
    break;
   case 'ma': // ìàêåäîíñêè
    $lc='àáâãäƒåæç¾è¼êëšìíœîïğñòóôõö÷Ÿø';
    $uc='ÀÁÂÃÄÅÆÇ½È£ÊËŠÌÍŒÎÏĞÑÒÓÔÕÖ×Ø';
+   $this->enc = "windows-1251";
    break;
   case 'sec': // ñğúáñêè íà êèğèëèöà
    $lc='àáâãäåæçè¼êëšìíœîïğñòóôõö÷Ÿø';
    $uc='ÀÁÂÃÄ€ÅÆÇÈ£ÊËŠÌÍŒÎÏĞÑÒÓÔÕÖ×Ø';
+   $this->enc = "windows-1251";
    break;
   case 'ru': // ğóñêè
    $lc='àáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ';
    $uc='ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞß';
+   $this->enc = "windows-1251";
    break;
   case 'gr': // ãğúöêè
    $lc='áâãäåæçèéêëìíîïğñòóôèõö÷øù';
    $uc='ÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑòÓÔÈÕÖ×ØÙ';
+   $this->enc = "ISO-8859-1";
    break;
  }
  for($i=0;$i<strlen($lc);$i++){
@@ -69,6 +76,13 @@ else return -1;
 }
 
 function compare($s1,$s2){
+global $enc;
+if($enc=='utf-8'){
+  $r = strcasecmp($s1,mb_convert_case($s2, MB_CASE_LOWER));
+  if($r<0) return -1;
+  else if($r>0) return 1;
+       else return 0;
+}
 $n1=strlen($s1); $n=$n1;
 $n2=strlen($s2);
 if ($n2<$n) $n=$n2; 

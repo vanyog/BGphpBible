@@ -2,8 +2,10 @@
 
 include("functions-$language.php");
 
+$fnotes = ''; // Бележки под линию
 $input_data=array(); // масив за входни данни
 check_for_get_data(); // установяване на входните данни, ако са изпратени с GET метод
+$last_bk=1; // Последната разпизната в препратка книга. 
 
 function a_path($p){
 if (strpos($_SERVER['SERVER_SOFTWARE'],'(Win32)'))
@@ -24,16 +26,16 @@ global $apth,$pth,$about_version;
 
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
-return '<td class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 1.2.2</a>,</b>
+return '<span class="panel">'.$word_project.'
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.2.0</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
-</td>';
+</span>';
 }
 
 function parallel_form(){
-global $pth,$bk,$ch;
-return '<FORM METHOD="POST" ACTION="parallel.php" NAME="b_parallel">
+global $pth,$bk,$ch,$form_metod;
+return '<FORM METHOD="'.$form_metod.'" ACTION="parallel.php" NAME="b_parallel">
 <INPUT TYPE="HIDDEN" NAME="version" VALUE="'.$pth.'">
 <INPUT TYPE="HIDDEN" NAME="book" VALUE="'.$bk.'">
 <INPUT TYPE="HIDDEN" NAME="chapter" VALUE="'.$ch.'">
@@ -42,7 +44,7 @@ return '<FORM METHOD="POST" ACTION="parallel.php" NAME="b_parallel">
 </FORM>';
 }
 
-function search_form(){
+function search_form($i=''){
 global $pth, $bk, $ch, $shv, $word_search, 
  $motranslator, $motrans_help_tip, $motrans_help, $motrans_lang_tip,
  $search_edit_size, $form_metod;
@@ -62,7 +64,7 @@ cTranslator.registerLang( cCyrPho )
 ';
 $ml='MOLANG="DEFAULT" ';
 }
-return '<form name="b_search" method="'.$form_metod.'" action="search.php">'.$mt.
+return '<form name="b_search'.$i.'" method="'.$form_metod.'" action="search.php">'.$mt.
 '<input type="HIDDEN" name="version" value="'.$pth.'">
 <input type="HIDDEN" name="book" value="'.$bk.'">
 <input type="HIDDEN" name="chapter" value="'.$ch.'">
@@ -85,26 +87,60 @@ else
 { return $v; }
 }
 
+// Четене на стих
+
 function read_verse($enc,$pf,$tf,$vi){
-global $findex,$fnotes;
 $vt='';
 $vp=read_vpos($pf,$vi);
 if ($vp!=4294967295){
  fseek($tf,$vp);
  $vl=fread($tf,2); $vl=ord($vl[0])+ord($vl[1])*256;
  $vt=decode(fread($tf,$vl));
- $p1=strpos($vt,"{");
- while ($p1>-1){
-  $p2=strpos($vt,"}");
-  $findex++;
-  $fnotes.="\n".'<P><SPAN CLASS="fnotes"><SUP>'.$findex.'</SUP></SPAN> '.
-           iconv($enc,'utf-8',make_format(substr($vt,$p1+1,$p2-$p1-1)) );
-  if ($p1<1) $p1++;
-  $vt=substr($vt,0,$p1-1).'<A HREF="#fnotes" CLASS="fnotes"><SUP>'.$findex.'</SUP></A>'.substr($vt,$p2+2);
-  $p1=strpos($vt,"{");
- }
+ $GLOBALS['enc'] = $enc;
+ // Обрботване на бележктите под линия и препратките, заградени с {} 
+ $vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
 }
 return make_format($vt);
+}
+
+function fromt_verse($vt){
+$vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
+return make_format($vt);
+}
+
+function replace_notes($a){
+global $findex, $fnotes, $enc, $sreader;
+if($sreader) return '';
+$a[1] = make_links($a[1]);
+$findex++;
+$fnotes.="\n".'<p><span class="fnotes"><sup>'.$findex.'</sup></span> '.
+         iconv($enc,'utf-8//IGNORE',make_format($a[1]));
+return '<a href="#fnotes" class="fnotes" onclick="to_anchor = true;"><sup>'.$findex.'</sup></a>';
+}
+
+function make_links($a){
+$parts = preg_split('/,|;/',$a);
+foreach($parts as $i=>$p) $parts[$i] = make_link($p);
+return implode(', ',$parts);
+}
+
+function make_link($p){
+global $bnames, $bn, $pt0, $pth, $last_bk, $enc;
+$a = array();
+if(!preg_match_all('/(.*?)\s(\d+):(\d+)/', $p, $a)) return $p;
+$gl = iconv('utf-8',$enc,'гл.');
+$st = iconv('utf-8',$enc,'ст.');
+if(empty($a[1][0])) $bk = $last_bk;
+else if(trim($a[1][0])==$gl) $bk = $GLOBALS['bk'];
+else {
+  $bk = $bn[0] * 2 + 1;
+  while( (trim($bnames[$bk])!=trim($a[1][0])) && ($bk<3*$bn[0]) ) $bk++;
+  if(trim($bnames[$bk])!=trim($a[1][0])){ return $p; }
+  $bk = $bk - $bn[0] * 2;
+}
+$lk = $_SERVER['PHP_SELF']."?cversion=$pt0&version=$pth&book=$bk&chapter=".$a[2][0]."&verse=".$a[3][0]."#".$a[3][0];
+$last_bk = $bk;
+return "<a href=\"$lk\">$p</a>";
 }
 
 function make_format($vt){
@@ -163,6 +199,26 @@ parse_str($_SERVER['QUERY_STRING'],$a);
 $c='chapter';
 if (in_array($c,array_keys($a))) $input_data=$a;
 else $input_data=$_POST;
+}
+
+function para_style($pth){
+switch ($pth) {
+case 'BL/': case 'Tzrg/': case 'Ru/': return true; break;
+default: return false;
+}
+}
+
+function audio($pth, $bk, $ch){
+global $pt0;
+$p = __DIR__."/$pth"."audio.php";
+if(!file_exists($p)) return 
+'<a href="index.php?cversion='.$pt0.'&version='.$pth.'&book='.$bk.'&chapter='.$ch.'&listen=on">
+<img src="images/ear1.png" alt="screen read" title="Вид на текста за екранен четец"></a>';
+include_once($p);
+$lk = audio_link($bk, $ch);
+if($lk) return '<a href="'.$lk.'" target="_blank">'.
+               '<img src="images/speaker.png" alt="audio" title="Щракнете за да чуете прочит на тази глава">'.
+               '</a>';
 }
 
 ?>

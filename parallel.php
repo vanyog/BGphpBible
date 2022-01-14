@@ -26,7 +26,7 @@ include("parallel-$language.php");
 
 $vpth=array_keys($version);   // масив с директориите на библиите
 $pth=posted('version',$default_version); // Директорията с файловете на Библията
-include("hlanguage.php");
+include_once("hlanguage.php");
 $bk=posted('book',1);    // Номер на текущата книга
 $ch=posted('chapter',1); // Номер на текущата глава
 $vr=posted('verse',1);   // Номер на текущия стих
@@ -50,9 +50,9 @@ foreach($vpth as $p) if (!in_array($p,array_keys($on_other_sites))) parallel($p)
 
 // Показване на бележките под линия
 if ($fnotes) 
-echo "\n".'<P>&nbsp;
-<HR SIZE="1">
-<A NAME="fnotes"></A>'.$fnotes;
+echo "\n".'<p id="fnotes">&nbsp;
+<hr>
+'.$fnotes.'</p>';
 
 echo '</DIV>
 <div class="bottom">
@@ -98,18 +98,23 @@ if (file_exists($dfn)){
 // определяне "локалния" номер на книгата $bk1
 $bn0=file($p."BibleTitles.txt");
 $bn1=explode(' ',trim($bn0[0]));
-if ($pth!='/') $bk1=array_search( $bn[$bk],array_slice($bn1,1) ) + 1;
-else $bk1=array_search( $bk,array_slice($bn1,1) ) + 1;
-if (($bk1==1)&&($bk!=1)) // ако няма такава книга
+if ($pth!='/') $bk1=array_search( $bn[$bk],array_slice($bn1,1) );
+else $bk1=array_search( $bk,array_slice($bn1,1),true );
+if ($bk1===false) // ако няма такава книга
 { $vt=''; $bn3=''; $bk1=1; $vr=''; }
 else {
+ $bk1++;
  // определяне индакса на стиха
  $vi=vindex($bk1,$ch,get_structure($bn0,$p))+$vr-1;
  // четене на стиха $vt;
  $pf=fopen($p.'CompactPoint.bin','r');
  $tf=fopen($p.'CompactText.bin','r');
- $hlang->HLanguage(version_languege($p));
- $vt=iconv($enc,'utf-8',read_verse($enc,$pf,$tf,$vi));
+ $hlang->__construct(version_languege($p));
+ $vt = read_verse($enc,$pf,$tf,$vi);
+ $va = explode('$$',$vt);
+ $vt = end($va);
+ $vt = iconv($enc,'utf-8',$vt);
+ $vt = str_replace('¶','',$vt);
  $bn3=' - '.iconv($enc,'utf-8',$bn0[2*$bn1[0]+$bk1])." $ch:$vr";
 }
 echo "\n".'<P><B><A HREF="" ONCLICK="BkToBible('
@@ -190,7 +195,7 @@ return '<input type="BUTTON" value="'.$next_verse.'" class="right" ONCLICK="Next
 function next_prev(){
 global $bn,$next_bk, $prev_bk, $next_ch, $prev_ch, $next_vr, $prev_vr;
 if ($bn) $next_bk=$bn[$next_bk];
-$gs=file("BibleStructure.txt");
+$gs=file("Bible_Structure.txt");
 $gvc=explode(' ',trim($gs[$next_bk-1]));
 if ($next_vr<$gvc[$next_ch]) $next_vr++;
 else {
