@@ -1,0 +1,6 @@
+# Този файл осигурява автоматично превключване от протокол http към https
+# Ако прецените, че това не е необходимо, не го качвайте на сървъра
+
+RewriteEngine On 
+RewriteCond %{HTTPS} off 
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}

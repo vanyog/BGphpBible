@@ -20,13 +20,15 @@ return $vcount;
 }
 
 function vindex($bk,$ch,$vcount){ // пресмята индекса на първия стих на глава $ch от книга $bk
-$vi=0;
+$vi=0; //die("$bk,$ch<br>".print_r($vcount,true));
 for($i=1;$i<=$bk;$i++){
  if ($i<$bk){ 
-  for ($c=1;$c<count($vcount[$i]);$c++){ $vi=$vi+$vcount[$i][$c]; }
+  for ($c=1;$c<count($vcount[$i]);$c++)
+      { $vi=$vi+$vcount[$i][$c]; }
  }
  else {
-  for($c=1;$c<$ch;$c++){ $vi=$vi+(isset($vcount[$bk][$c])?$vcount[$bk][$c]:0); }
+  for($c=1;$c<$ch;$c++)
+     { $vi=$vi+(isset($vcount[$bk][$c])?$vcount[$bk][$c]:0); }
  }
 }
 return $vi;
