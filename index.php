@@ -55,23 +55,22 @@ pagehead(); // Изпращане <HEAD>...</HEAD> частта на стран�
 
 if(!$sreader){
 
-echo '<form name="b_open" action="index.php" method="'.$form_metod.'">
+echo '<nav id="navigation"><p><button id="navButton" onclick="toggleNav()">&#9776;</button></p>
+<form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
-'.prev_chapter_link().'
-'.
-about_version();
+';
 
 // Показване на select елемента за избор на Версия
-echo '<select name="version" onchange="changever();">';
+echo '<p><label for="slt">'.$bible_translation.'</label><select name="version" id="slt" onchange="changever();">';
 foreach($version as $v=>$n){
  echo "\n<option value=\"$v\"";
  if ($v==$pth){ echo " selected"; }
  echo ">$n";
 }
-echo '</select>';
+echo '</select></p>';
 
 // Показване на select елемента за избор на книга
-echo '<select name="book" onchange="bookchange();">';
+echo '<p><label for="slb">'.$word_book.'</label><select name="book" id="slb" onchange="bookchange();">';
 for ($i=$bn[0]+1;$i<2*$bn[0]+1;$i++){
  $j=$i-$bn[0];
  $bnames[$i]=trim($bnames[$i]);
@@ -82,26 +81,31 @@ for ($i=$bn[0]+1;$i<2*$bn[0]+1;$i++){
  if($pth=='Gr/') echo iconv("windows-1253",'utf-8',$bnames[$i]); else
  echo iconv($enc,'utf-8',$bnames[$i]);
 }
-echo '</select>';
+echo '</select></p>
+';
 
 // Показване на select елемента за избор на глава
-echo '<select name="chapter" onchange="document.forms[0].submit();">';
+echo '<p><label for="slch">'.$word_chapter.':</label> <select name="chapter" id="slch" onchange="document.forms[0].submit();">';
 for ($i=1;$i<(is_array($vcount[$bk])?count($vcount[$bk]):0);$i++){
  if ($i==$ch){ echo "\n<option selected>"; } else { echo "\n<option>"; }
  echo $i; 
 }
 if(!isset($vcount[$bk])) echo "\n<option selected>1";
-echo '</select><input type="submit" value="'.$open_chapter.'">'.next_chapter_link().'
+echo '</select></p>
+<p><input type="submit" value="'.$open_chapter.'"></p>
 </form>
 
 '.parallel_form();
 
 //Показване на формата за търсене и линк "Тълкувание"
-echo '<div id="search_block">
-'.audio($pth, $bk, $ch).'
+echo '<p>'.prev_chapter_link().' &nbsp; 
+'.next_chapter_link().'</p>
 '.search_form().'
 '.coment_link().'
-</div>
+'.audio($pth, $bk, $ch).'
+'.about_version().'
+</nav>
+<div id="all_page">
 ';
 
 }
@@ -116,7 +120,6 @@ if ( is_array($bn) && (count($bn)>21) ){
  }
  if($h1){
    echo "<h1 id=\"h1\">$h1</h1>\n";
-   echo "<div id=\"h1c\">$h1</div>";
  }
 }
 else { echo "<p>$missing_files</p>"; }
@@ -131,7 +134,7 @@ $pf=fopen($pth.'CompactPoint.bin','r');
 $tf=fopen($pth.'CompactText.bin','r');
 
 // Четене и показване на стиховете от текущата глава
-$cvc = isset($vcount[$bk][$ch]) ? $vcount[$bk][$ch] : 0;
+$cvc = isset($vcount[$bk][$ch]) ? $vcount[$bk][$ch] : 0; // Брой стихове в текущата глава
 for ($i=0;$i<$cvc;$i++){
  $vt=read_verse($enc,$pf,$tf,$vi+$i);
  $a=explode('$$',$vt);
@@ -323,22 +326,6 @@ cookie_set("book","'.$bk.'");
 cookie_set("chapter","'.$ch.'");
 //cookie_set("verse","'.$vr.'");
 
-function onBodyScroll(e){
-   var h1c = document.getElementById("h1c");
-   var h1  = document.getElementById("h1");
-   var hh = h1.offsetTop;
-   var sh = window.scrollY;
-   if(sh > hh){
-      var w = document.getElementsByTagName("body")[0].offsetWidth - 20;
-      h1c.style.width = w + "px";
-      h1c.style.visibility = "visible";
-   }
-   else {
-      h1c.style.visibility = "hidden";
-   }
-   cookie_set("bscrollY",e.scrollY);
-}
-
 var max_sh = 0;
 var no_click = true;
 function page_move(ev){
@@ -350,7 +337,7 @@ function page_move(ev){
     var wh = window.innerHeight;
     var sh = window.scrollY;
     if(sh>max_sh) max_sh = sh;
-    var dd = document.getElementById("h1c");
+    var dd = document.getElementById("h1");
     dd = dd.offsetHeight + 10;
     if(ch-sh<wh/4) window.scrollTo(0, sh - wh + dd);
     if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - dd);
@@ -375,7 +362,7 @@ no_click = true;
 
 function correctTop(){
 if(location.hash)setTimeout(function(){
-  var h = document.getElementById("h1c").offsetHeight;
+  var h = document.getElementById("h1").offsetHeight;
   var t = document.getElementById(location.hash.substring(1)).offsetTop;
   window.scrollTo(0, t - h);
 }, 500);
@@ -385,23 +372,41 @@ else{
 }
 }
 
+function toggleNav(){
+var n = document.getElementById("navigation");
+var h = n.offsetHeight;
+var b = document.getElementById("navButton");
+if(h==60) {
+  n.style.height = "auto";
+  n.style.width = "auto";
+  n.style.backgroundColor = "#e1e1e1";
+  b.innerHTML = "&nbsp;x&nbsp;";
+}
+else {
+  n.style.height = "60px";
+  n.style.width = "60px";
+  n.style.backgroundColor = "#e1e1e100";
+  b.innerHTML = "&#9776;";
+}
+}
+
 </script>
 
 </HEAD>
 
-<body onload="correctTop()" onhashchange="correctTop()" onscroll="onBodyScroll(this);" onclick="page_clicked(event);" ondblclick="page_dblclicked();"><div id="all_page">
+<body onload="correctTop()" onhashchange="correctTop()" onclick="page_clicked(event);" ondbl_click="page_dblclicked();">
 ';
 }
 
 function prev_chapter_link(){
 global $pt0, $pth, $prev_chapter, $prbk, $prch;
-return '<a class="button" href="index.php?cversion='.$pt0.
+return '<a class="left" href="index.php?cversion='.$pt0.
        '&version='.$pth.'&book='.$prbk.'&chapter='.$prch.'" onclick="goprev();">'.$prev_chapter.'</a>';
 }
 
 function next_chapter_link(){
 global $pt0, $pth, $next_chapter, $nxbk, $nxch;
-return '<a class="button right" href="index.php?cversion='.$pt0.
+return '<a class="right" href="index.php?cversion='.$pt0.
        '&version='.$pth.'&book='.$nxbk.'&chapter='.$nxch.'" onclick="gonext();">'.$next_chapter.'</a>';
 }
 

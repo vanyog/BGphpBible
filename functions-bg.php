@@ -1,4 +1,6 @@
 <?php
+$text_to_search="Текст, който искате да намерите:";
+$audio_link="Слушане на прочит";
 $about_version="За превода";
 $word_project="Проект";
 $maintained_by="поддържан от";

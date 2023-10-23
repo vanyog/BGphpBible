@@ -25,13 +25,13 @@ include("parallel-$language.php");
 //print_r($_POST);
 
 $vpth=array_keys($version);   // масив с директориите на библиите
-$pth=posted('version',$default_version); // Директорията с файловете на Библията
+$pth=posted('version',$default_version); // Директорията с файловете на текущата Библия
 include_once("hlanguage.php");
 $bk=posted('book',1);    // Номер на текущата книга
 $ch=posted('chapter',1); // Номер на текущата глава
 $vr=posted('verse',1);   // Номер на текущия стих
 $gch=$ch; $gvr=$vr;      // "Глобални" номера на текущите глава и стих
-include("structure.php");// Зарежда описанието на структурата на Библията
+include("structure.php");// Зареждане структурата на текущата Библия
 if ($pth!='/') globalize();// Пресмятане на "глобалните" глава и стих
 $next_bk=$bk;
 $prev_bk=$bk;
@@ -52,14 +52,14 @@ foreach($vpth as $p) if (!in_array($p,array_keys($on_other_sites))) parallel($p)
 if ($fnotes) 
 echo "\n".'<p id="fnotes">&nbsp;
 <hr>
-'.$fnotes.'</p>';
+'.$fnotes.'</p>
+<hr>';
 
 echo '</DIV>
 <div class="bottom">
 '.pbutton().
-about_the_project().
-nbutton().
-'
+about_the_project().'
+'.nbutton().'
 </div>';
 
 // --------- Функции ----------
@@ -79,7 +79,7 @@ if (file_exists($dfn)){
 }
 }
 
-function parallel($p){
+function parallel($p){ // $p е директорията на Библия
 global $pth,$bn,$bk,$version,$gch,$gvr,$hlang;
 // преминаване към "локални" номера на глава $ch и стих $vr
 $apth=a_path($p);
@@ -89,7 +89,7 @@ $ch=$gch; $vr=$gvr;
 if (file_exists($dfn)){
  $df=file($dfn);
  foreach($df as $l){
-  $la=explode(' ',trim($l));
+  $la=explode(' ',trim($l)); //die($bn[$bk]."");
   if (($bn[$bk]==$la[0])&&($ch==$la[1])&&($vr>=$la[2])){
    $ch=$gch-$la[3]; $vr=$gvr-$la[4];
   }
@@ -105,7 +105,7 @@ if ($bk1===false) // ако няма такава книга
 else {
  $bk1++;
  // определяне индакса на стиха
- $vi=vindex($bk1,$ch,get_structure($bn0,$p))+$vr-1;
+ $vi=vindex($bk1,$ch,get_structure($bn1,$p))+$vr-1;
  // четене на стиха $vt;
  $pf=fopen($p.'CompactPoint.bin','r');
  $tf=fopen($p.'CompactText.bin','r');
@@ -124,7 +124,7 @@ echo "\n".'<P><B><A HREF="" ONCLICK="BkToBible('
 }
 
 function start_page(){
-global $next_bk, $prev_bk, $next_ch, $prev_ch, $next_vr, $prev_vr;
+global $pth, $next_bk, $prev_bk, $next_ch, $prev_ch, $next_vr, $prev_vr;
 header("Content-Type: text/html; charset=utf-8");
 echo '<!DOCTYPE html>
 <html lang="bg">
@@ -144,14 +144,14 @@ document.forms.b_open.verse.value=v;
 document.forms.b_open.submit();
 }
 function NextVerse(){
-document.forms.b_parallel.version.value="/";
+document.forms.b_parallel.version.value="'.$pth.'";
 document.forms.b_parallel.book.value="'.$next_bk.'";
 document.forms.b_parallel.chapter.value="'.$next_ch.'";
 document.forms.b_parallel.verse.value="'.$next_vr.'";
 document.forms.b_parallel.submit();
 }
 function PrevVerse(){
-document.forms.b_parallel.version.value="/";
+document.forms.b_parallel.version.value="'.$pth.'";
 document.forms.b_parallel.book.value="'.$prev_bk.'";
 document.forms.b_parallel.chapter.value="'.$prev_ch.'";
 document.forms.b_parallel.verse.value="'.$prev_vr.'";
@@ -166,11 +166,12 @@ document.forms.b_parallel.submit();
 <INPUT TYPE="HIDDEN" NAME="book" VALUE="">
 <INPUT TYPE="HIDDEN" NAME="chapter" VALUE="">
 <INPUT TYPE="HIDDEN" NAME="verse" VALUE="">
+<INPUT TYPE="HIDDEN" NAME="index" VALUE="">
 </FORM>
+<DIV CLASS="content">
 <div class="bottom">
 '.parallel_form().tbuttons().'
 </div>
-<DIV CLASS="content">
 <H1>Библейски паралел (сравнение на преводите)</H1>
 ';
 }

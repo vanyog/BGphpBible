@@ -19,7 +19,7 @@ global $apth,$pth,$about_version;
  $alk=$apth.'about.html';
  $lk=$pth.'about.html';
  if (file_exists($alk))
-  return '<a href="'.$lk.'" id="about_link">'.$about_version.'</a>';
+  return '<p><a href="'.$lk.'" id="about_link">'.$about_version.'</a></p>';
  else
   return '&nbsp;';
 }
@@ -27,7 +27,7 @@ global $apth,$pth,$about_version;
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
 return '<span class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.2.0</a>,</b>
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.3.0</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
 </span>';
@@ -45,7 +45,7 @@ return '<FORM METHOD="'.$form_metod.'" ACTION="parallel.php" NAME="b_parallel">
 }
 
 function search_form($i=''){
-global $pth, $bk, $ch, $shv, $word_search, 
+global $pth, $bk, $ch, $shv, $word_search, $text_to_search, 
  $motranslator, $motrans_help_tip, $motrans_help, $motrans_lang_tip,
  $search_edit_size, $form_metod;
 $mt=''; $ml='';
@@ -69,9 +69,9 @@ return '<form name="b_search'.$i.'" method="'.$form_metod.'" action="search.php"
 <input type="HIDDEN" name="book" value="'.$bk.'">
 <input type="HIDDEN" name="chapter" value="'.$ch.'">
 <input type="HIDDEN" name="part" value="0">
-<input type="TEXT" name="stext" '.$ml.'value="" size="'.$search_edit_size.'">
-<input type="HIDDEN" name="showv" value="'.$shv.'"> 
-<input type="SUBMIT" value="'.$word_search.'">&nbsp;
+<input type="HIDDEN" name="showv" value="'.$shv.'">
+<p><label for="srch">'.$text_to_search.'</label><br><input type="TEXT" name="stext" id="srch" '.$ml.'value="" size="'.$search_edit_size.'"></p>
+<p><input type="SUBMIT" value="'.$word_search.'"></p>
 </form>';
 }
 
@@ -82,7 +82,7 @@ return array_value($k,$input_data,$v);
 
 function array_value($k,$a,$v){
 if (array_key_exists($k,$a))
-{ if ($a[$k]=="") return $v; else return $a[$k]; } 
+{ if (empty($a[$k])) return $v; else return $a[$k]; } 
 else
 { return $v; }
 }
@@ -209,16 +209,14 @@ default: return false;
 }
 
 function audio($pth, $bk, $ch){
-global $pt0;
+global $pt0,$audio_link;
 $p = __DIR__."/$pth"."audio.php";
 if(!file_exists($p)) return 
-'<a href="index.php?cversion='.$pt0.'&version='.$pth.'&book='.$bk.'&chapter='.$ch.'&listen=on">
-<img src="images/ear1.png" alt="screen read" title="Вид на текста за екранен четец"></a>';
+'<p><a href="index.php?cversion='.$pt0.'&version='.$pth.'&book='.$bk.'&chapter='.$ch.'&listen=on">
+'.$audio_link.'</a></p>';
 include_once($p);
 $lk = audio_link($bk, $ch);
-if($lk) return '<a href="'.$lk.'" target="_blank">'.
-               '<img src="images/speaker.png" alt="audio" title="Щракнете за да чуете прочит на тази глава">'.
-               '</a>';
+if($lk) return '<p><a href="'.$lk.'" target="_blank">'.$audio_link.'</a></p>';
 }
 
 ?>
