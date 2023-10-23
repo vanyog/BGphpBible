@@ -166,12 +166,13 @@ fclose($pf);
 
 // Показване на бележки под линия
 if ($fnotes && !$sreader) 
-   echo "\n".'<div class="bottom" id="mbtns">
+   echo "\n".'<hr>
+<div class="bottom" id="mbtns">
 '.prev_chapter_link().'
 '.next_chapter_link().'
 <p style="clear:both;"></p>
 </div>
-<a id="fnotes"></a>'.$fnotes;
+<hr id="fnotes">'.$fnotes;
 
 if($sreader)
    echo "\n".'
@@ -182,6 +183,7 @@ if($sreader)
 
 //Показване на долните бутони
 if(!$sreader) echo '<p>&nbsp;</p>
+<hr>
 <div class="bottom">
 '.prev_chapter_link().'
 '.about_the_project().'
