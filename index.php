@@ -105,10 +105,12 @@ echo '<p>'.prev_chapter_link().' &nbsp;
 '.audio($pth, $bk, $ch).'
 '.about_version().'
 </nav>
-<div id="all_page">
 ';
 
 }
+
+echo '<div id="all_page">
+';
 
 // Показване на заглавието на текста
 if ( is_array($bn) && (count($bn)>21) ){

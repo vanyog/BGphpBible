@@ -5,7 +5,7 @@ body { font-family:-apple-system, Sans-Serif; font-size:14pt;
  background-image:linear-gradient(to right, #939393, #E1E1E1 calc((100% - 50em)/2), #E1E1E1 calc(100% - (100% - 50em)/2) , #939393);
 }
 
-#all_page { background-color:#ffffff; margin-bottom:2em; padding-top:50px; }
+#all_page { background-color:#ffffff; padding-bottom:2em; padding-top:50px; }
 
 form, input, select, button { font-size:inherit;}
 input, input[type=button], input[type=submit], select, button, nav a
