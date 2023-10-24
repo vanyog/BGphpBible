@@ -55,7 +55,8 @@ pagehead(); // Изпращане <HEAD>...</HEAD> частта на стран�
 
 if(!$sreader){
 
-echo '<nav id="navigation"><p><button id="navButton" onclick="toggleNav()">&#9776;</button></p>
+echo '<nav id="navigation"><p>
+<button id="navButton" onclick="toggleNav()">&#9776;</button></p>
 <form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
 ';
@@ -103,7 +104,10 @@ echo '<p>'.prev_chapter_link().' &nbsp;
 '.search_form().'
 '.coment_link().'
 '.audio($pth, $bk, $ch).'
-'.about_version().'
+<p>
+<button title="'.$dark_mode.'" onclick="toggleDarkMode();">&#x1F317;</button>
+<button title="'.$full_reload.'" onclick="document.location.reload(true);">&#8635;</button>
+'.about_version().'</p>
 </nav>
 ';
 
@@ -366,7 +370,16 @@ function page_dblclicked(){
 isDblClick = true;
 }
 
+var darkMode = cookie_value("darkMode");
+
 function correctTop(){
+window.addEventListener("resize",setPaddingTop);
+setPaddingTop();
+//setTimeout(function()
+{
+  if(darkMode==0) document.body.style.filter=\'invert(0%)\';
+  else document.body.style.filter=\'invert(100%)\';
+}//, 0);
 if(location.hash)setTimeout(function(){
   var h = document.getElementById("h1").offsetHeight;
   var t = document.getElementById(location.hash.substring(1)).offsetTop;
@@ -394,6 +407,19 @@ else {
   n.style.backgroundColor = "#ffffff00";
   b.innerHTML = "&#9776;";
 }
+}
+
+function toggleDarkMode(){
+var b = document.body;
+if(darkMode==0) { b.style.filter=\'invert(100%)\'; darkMode=1; cookie_set("darkMode",1); }
+else { b.style.filter=\'invert(0)\'; darkMode=0; cookie_set("darkMode",0); }
+toggleNav();
+}
+
+function setPaddingTop(){
+var h = document.getElementById("h1");
+var ap = document.getElementById("all_page");
+ap.style.paddingTop = h.offsetHeight + 10 + "px";
 }
 
 </script>

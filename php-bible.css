@@ -1,11 +1,9 @@
-body { font-family:-apple-system, Sans-Serif; font-size:14pt;
- background-color:#939393;
- margin:0 auto;
- max-width:850px;
+body { font-family:-apple-system, Sans-Serif; font-size:14pt; background-color:#939393;
  background-image:linear-gradient(to right, #939393, #E1E1E1 calc((100% - 50em)/2), #E1E1E1 calc(100% - (100% - 50em)/2) , #939393);
 }
 
-#all_page { background-color:#ffffff; padding-bottom:2em; padding-top:50px; }
+#all_page { background-color:#ffffff; padding-bottom:2em; padding-top:50px;  
+            margin:0 auto; max-width:850px; }
 
 form, input, select, button { font-size:inherit;}
 input, input[type=button], input[type=submit], select, button, nav a
@@ -22,7 +20,7 @@ nav select:hover, nav a:hover, nav button:hover, nav input[type=submit]:hover
   border-radius:5px; padding:2px 5px; text-decoration:none; 
 }
 
-h1 { position:fixed; top:0; max-width:770px; width:calc( 100% - 20px ); font-size:120%; 
+h1 { position:fixed; top:0; max-width:780px; width:calc( 100% - 70px ); font-size:120%; 
      margin-top:0; padding:10px; padding-right:60px; background-color:#ffffff; }
 h1 span { white-space:nowrap; }
 
