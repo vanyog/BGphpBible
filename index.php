@@ -292,6 +292,7 @@ function bookchange(){
 
 var no_move = false;
 
+// Отваряне на по-следваща глава
 function gonext(){
 cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($nxbk-1).'";
@@ -300,6 +301,7 @@ document.b_open.chapter.selectedIndex='.($nxch-1).';
 document.b_open.submit();
 }
 
+// Отваряне на по-предна глава
 function goprev(){
 cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($prbk-1).'";
@@ -331,12 +333,12 @@ cookie_set("chapter","'.$ch.'");
 //cookie_set("verse","'.$vr.'");
 
 var max_sh = 0;
-var no_click = true;
+var isDblClick = true;
 function page_move(ev){
-    if(no_click) return;
+    if(isDblClick) return;
     var bb = document.getElementById("mbtns");
     var ch = ev.pageY;
-    if(bb && (ch<bb.offsetTop)) do_page_move(sh);
+//    if(bb && (ch>bb.offsetTop)) chapter_change(sh);
     var dh = document.body.clientHeight;
     var wh = window.innerHeight;
     var sh = window.scrollY;
@@ -347,21 +349,21 @@ function page_move(ev){
     if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - dd);
 }
 
-function do_page_move(sh){
+function chapter_change(sh){
     var sh1 = window.scrollY;
     if(sh1>0 && sh1==sh) gonext();
     if(max_sh>0 && sh1==0 && sh1==sh) goprev();
 }
 
-var to_anchor = false;
+var to_anchor = false; // Флаг, който е вдиганаат от щракване върху линк към бележка под линия
 function page_clicked(ev){
-no_click = false;
+isDblClick = false;
 if(!to_anchor) setTimeout(page_move,300,ev);
 to_anchor = false;
 }
 
 function page_dblclicked(){
-no_click = true;
+isDblClick = true;
 }
 
 function correctTop(){
@@ -389,7 +391,7 @@ if(h==60) {
 else {
   n.style.height = "60px";
   n.style.width = "60px";
-  n.style.backgroundColor = "#e1e1e100";
+  n.style.backgroundColor = "#ffffff00";
   b.innerHTML = "&#9776;";
 }
 }
@@ -398,7 +400,7 @@ else {
 
 </HEAD>
 
-<body onload="correctTop()" onhashchange="correctTop()" onclick="page_clicked(event);" ondbl_click="page_dblclicked();">
+<body onload="correctTop()" onhashchange="correctTop()" onclick="page_clicked(event);" ondblclick="page_dblclicked();">
 ';
 }
 

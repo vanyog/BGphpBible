@@ -22,8 +22,8 @@ nav select:hover, nav a:hover, nav button:hover, nav input[type=submit]:hover
   border-radius:5px; padding:2px 5px; text-decoration:none; 
 }
 
-h1 { position:fixed; top:0; width:830px; max-width:calc( 100% - 20px); font-size:120%; 
-     margin-top:0; padding:10px; background-color:#ffffff; }
+h1 { position:fixed; top:0; max-width:770px; width:calc( 100% - 20px ); font-size:120%; 
+     margin-top:0; padding:10px; padding-right:60px; background-color:#ffffff; }
 h1 span { white-space:nowrap; }
 
 h2 { font-size:110%; margin-left:10pt; }
