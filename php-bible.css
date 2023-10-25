@@ -1,4 +1,5 @@
 body { font-family:-apple-system, Sans-Serif; font-size:14pt; background-color:#939393;
+ margin: 0;
  background-image:linear-gradient(to right, #939393, #E1E1E1 calc((100% - 50em)/2), #E1E1E1 calc(100% - (100% - 50em)/2) , #939393);
 }
 
@@ -11,7 +12,7 @@ input, input[type=button], input[type=submit], select, button, nav a
   padding:2px 5px; color:black; background-color:#dbdbdb;
 }
 
-nav { position:fixed; right:0; top:0; text-align:right; z-index:1; width:60px; height:60px; 
+nav { position:absolute; right:0; top:0; text-align:right; z-index:1; width:60px; height:60px; 
 overflow: hidden; max-width:100%; }
 nav p { margin:15px; }
 nav input[type=text] { width: 445px; max-width:calc(100% - 10px); background-color:#ffffff; }
@@ -20,7 +21,7 @@ nav select:hover, nav a:hover, nav button:hover, nav input[type=submit]:hover
   border-radius:5px; padding:2px 5px; text-decoration:none; 
 }
 
-h1 { position:fixed; top:0; max-width:780px; width:calc( 100% - 70px ); font-size:120%; 
+h1 { position:absolute; top:0; max-width:780px; width:calc( 100% - 70px ); font-size:120%; 
      margin-top:0; padding:10px; padding-right:60px; background-color:#ffffff; }
 h1 span { white-space:nowrap; }
 

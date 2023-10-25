@@ -56,7 +56,7 @@ pagehead(); // Изпращане <HEAD>...</HEAD> частта на стран�
 if(!$sreader){
 
 echo '<nav id="navigation"><p>
-<button id="navButton" onclick="toggleNav()">&#9776;</button></p>
+<button id="navButton" onclick="toggleNav(event)">&#9776;</button></p>
 <form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
 ';
@@ -375,11 +375,10 @@ var darkMode = cookie_value("darkMode");
 function correctTop(){
 window.addEventListener("resize",setPaddingTop);
 setPaddingTop();
-//setTimeout(function()
-{
-  if(darkMode==0) document.body.style.filter=\'invert(0%)\';
-  else document.body.style.filter=\'invert(100%)\';
-}//, 0);
+setTimeout(function(){
+if(darkMode==0) document.body.style.filter=\'invert(0%)\';
+else document.body.style.filter=\'invert(100%)\';
+},100);
 if(location.hash)setTimeout(function(){
   var h = document.getElementById("h1").offsetHeight;
   var t = document.getElementById(location.hash.substring(1)).offsetTop;
@@ -391,7 +390,8 @@ else{
 }
 }
 
-function toggleNav(){
+function toggleNav(ev){
+ev.stopPropagation();
 var n = document.getElementById("navigation");
 var h = n.offsetHeight;
 var b = document.getElementById("navButton");
@@ -400,33 +400,56 @@ if(h==60) {
   n.style.width = "auto";
   n.style.backgroundColor = "#e1e1e1";
   b.innerHTML = "&nbsp;x&nbsp;";
+  makeNavScrollable();
 }
 else {
   n.style.height = "60px";
   n.style.width = "60px";
+  n.style.overflow = "hidden";
   n.style.backgroundColor = "#ffffff00";
   b.innerHTML = "&#9776;";
 }
 }
 
+function makeNavScrollable(){
+var n = document.getElementById("navigation");
+var wh = window.innerHeight;
+var nh = n.clientHeight;
+if(wh<486){ //alert(wh+" "+nh);
+  n.style.height = wh+"px";
+  n.style.overflowY = "scroll";
+}
+else if(n.offsetHeight>60) n.style.overflowY = "auto";
+}
+
 function toggleDarkMode(){
-var b = document.body;
+var b = document.body; //getElementById("all_page");
 if(darkMode==0) { b.style.filter=\'invert(100%)\'; darkMode=1; cookie_set("darkMode",1); }
 else { b.style.filter=\'invert(0)\'; darkMode=0; cookie_set("darkMode",0); }
-toggleNav();
+toggleNav(event);
 }
 
 function setPaddingTop(){
+makeNavScrollable();
 var h = document.getElementById("h1");
 var ap = document.getElementById("all_page");
 ap.style.paddingTop = h.offsetHeight + 10 + "px";
+}
+
+function onBodyScroll(){
+var h = window.scrollY;
+var h1 = document.getElementById("h1");
+var n = document.getElementById("navigation");
+h1.style.top = h+"px";
+n.style.top = h+"px";
 }
 
 </script>
 
 </HEAD>
 
-<body onload="correctTop()" onhashchange="correctTop()" onclick="page_clicked(event);" ondblclick="page_dblclicked();">
+<body onload="correctTop()" onhashchange="correctTop()" onclick="page_clicked(event);" 
+ondblclick="page_dblclicked()" onscroll="onBodyScroll()">
 ';
 }
 
