@@ -113,6 +113,8 @@ echo '<p>'.prev_chapter_link().' &nbsp;
 
 }
 
+if($sreader) echo '<button onclick="selectAllText();" id="sallb">Select</button>'."\n";
+
 echo '<div id="all_page">
 ';
 
@@ -413,9 +415,10 @@ else {
 
 function makeNavScrollable(){
 var n = document.getElementById("navigation");
+if(!n) return;
 var wh = window.innerHeight;
 var nh = n.clientHeight;
-if(wh<486){ //alert(wh+" "+nh);
+if(wh<486){
   n.style.height = wh+"px";
   n.style.overflowY = "scroll";
 }
@@ -433,7 +436,7 @@ function setPaddingTop(){
 makeNavScrollable();
 var h = document.getElementById("h1");
 var ap = document.getElementById("all_page");
-ap.style.paddingTop = h.offsetHeight + 10 + "px";
+ap.style.paddingTop = h.offsetHeight + 18 + "px";
 }
 
 function onBodyScroll(){
@@ -442,6 +445,15 @@ var h1 = document.getElementById("h1");
 var n = document.getElementById("navigation");
 h1.style.top = h+"px";
 n.style.top = h+"px";
+}
+
+function selectAllText(){
+var s = window.getSelection();
+var l = String(s).length;
+var r = document.createRange();
+r.selectNodeContents(document.getElementById("all_page"));
+s.removeAllRanges();
+if(!l) s.addRange(r);
 }
 
 </script>

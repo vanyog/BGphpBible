@@ -27,7 +27,7 @@ global $apth,$pth,$about_version;
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
 return '<span class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.3.2</a>,</b>
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.3.3</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
 </span>';
@@ -209,10 +209,17 @@ default: return false;
 }
 
 function audio($pth, $bk, $ch){
-global $pt0,$audio_link;
+global $pt0,$audio_link, $audio_message;
 $p = __DIR__."/$pth"."audio.php";
 if(!file_exists($p)) return 
-'<p><a href="index.php?cversion='.$pt0.'&version='.$pth.'&book='.$bk.'&chapter='.$ch.'&listen=on">
+'<script>
+function audioMessage(l){
+alert("'.$audio_message.'");
+document.location = l;
+}
+</script>
+<p><a href="index.php?cversion='.$pt0.'&version='.$pth.'&book='.$bk.'&chapter='.$ch.'&listen=on" 
+onclick="audioMessage(this);return false;">
 '.$audio_link.'</a></p>';
 include_once($p);
 $lk = audio_link($bk, $ch);
