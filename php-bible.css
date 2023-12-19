@@ -1,6 +1,6 @@
 body { font-family:-apple-system, Sans-Serif; font-size:14pt; background-color:#939393;
- margin: 0;
- background-image:linear-gradient(to right, #939393, #E1E1E1 calc((100% - 50em)/2), #E1E1E1 calc(100% - (100% - 50em)/2) , #939393);
+ margin: 0; hyphens: auto;
+ background-image:linear-gradient(to right, #939393, #E1E1E1 calc((100% - 850px)/2), #E1E1E1 calc(100% - (100% - 850px)/2) , #939393);
 }
 
 #all_page { background-color:#ffffff; padding-bottom:2em; padding-top:50px;  
@@ -9,20 +9,22 @@ body { font-family:-apple-system, Sans-Serif; font-size:14pt; background-color:#
 form, input, select, button { font-size:inherit;}
 input, input[type=button], input[type=submit], select, button, nav a
 { border-style:solid; border-width:1px; border-color:#8f8f9d; border-radius:5px;
-  padding:2px 5px; color:black; background-color:#dbdbdb;
+  padding:2px 5px; margin-left:20px; color:black; background-color:#dbdbdb; white-space:nowrap;
 }
+#navButton { margin-left:0; }
 
-nav { position:absolute; right:0; top:0; text-align:right; z-index:1; width:60px; height:60px; 
-overflow: hidden; max-width:100%; }
-nav p { margin:15px; }
-nav input[type=text] { width: 445px; max-width:calc(100% - 10px); background-color:#ffffff; }
+nav { position:absolute; right:0; top:0; text-align:right; z-index:1; width:70px; height:70px; 
+overflow: hidden; max-width:100%; max-height:100vh; }
+nav p { margin:15px; line-height:2.2em; overflow-y:auto; overflow-x:hidden; }
+nav label { white-space:nowrap; }
+nav input[type=text] { width: 445px; max-width:calc(100% - 32px); background-color:#ffffff; }
 nav select:hover, nav a:hover, nav button:hover, nav input[type=submit]:hover 
 { background-color:#d3d3d3; border-style:solid; border-width:1px; border-color:#8f8f9d;
   border-radius:5px; padding:2px 5px; text-decoration:none; 
 }
 
-h1 { position:absolute; top:0; max-width:780px; width:calc( 100% - 70px ); font-size:120%; 
-     margin-top:0; padding:10px; padding-right:60px; background-color:#ffffff; }
+h1 { position:absolute; top:0; max-width:770px; width:calc( 100% - 70px ); font-size:120%; 
+     margin-top:0; padding:10px; padding-right:70px; background-color:#ffffff; }
 h1 span { white-space:nowrap; }
 
 h2 { font-size:110%; margin-left:10pt; }

@@ -55,7 +55,7 @@ pagehead(); // Изпращане <HEAD>...</HEAD> частта на стран�
 
 if(!$sreader){
 
-echo '<nav id="navigation"><p>
+echo '<nav id="navigation" onclick="navClicked(event)"><p>
 <button id="navButton" onclick="toggleNav(event)">&#9776;</button></p>
 <form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
@@ -105,6 +105,8 @@ echo '<p>'.prev_chapter_link().' &nbsp;
 '.coment_link().'
 '.audio($pth, $bk, $ch).'
 <p>
+<button title="'.$decrease_font.'" onclick="decreaseFont();">A<sup>-</sup></button>
+<button title="'.$increase_font.'" onclick="increaseFont();">A<sup>+</sup></button>
 <button title="'.$dark_mode.'" onclick="toggleDarkMode();">&#x1F317;</button>
 <button title="'.$full_reload.'" onclick="document.location.reload(true);">&#8635;</button>
 '.about_version().'</p>
@@ -235,7 +237,6 @@ global $on_other_sites, $version, $pth, $bk, $ch, $vr, $vcount, $nxbk, $nxch, $p
 determinenextandprev();
 echo '<!DOCTYPE html>
 <html lang="bg">
-
 <HEAD>
   <TITLE>'.$version[$pth].' - проект BGphpBible</TITLE>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -364,7 +365,7 @@ function chapter_change(sh){
 var to_anchor = false; // Флаг, който е вдиганаат от щракване върху линк към бележка под линия
 function page_clicked(ev){
 isDblClick = false;
-if(!to_anchor) setTimeout(page_move,300,ev);
+if(!to_anchor && !closeNav()) setTimeout(page_move,300,ev);
 to_anchor = false;
 }
 
@@ -378,9 +379,12 @@ function correctTop(){
 window.addEventListener("resize",setPaddingTop);
 setPaddingTop();
 setTimeout(function(){
-if(darkMode==0) document.body.style.filter=\'invert(0%)\';
-else document.body.style.filter=\'invert(100%)\';
-},100);
+var s = document.body.style;
+if(darkMode==0) s.filter=\'invert(0%)\';
+else s.filter=\'invert(100%)\';
+var fs = cookie_value("fontSize", "14pt");
+s.fontSize = fs;
+},50);
 if(location.hash)setTimeout(function(){
   var h = document.getElementById("h1").offsetHeight;
   var t = document.getElementById(location.hash.substring(1)).offsetTop;
@@ -397,7 +401,8 @@ ev.stopPropagation();
 var n = document.getElementById("navigation");
 var h = n.offsetHeight;
 var b = document.getElementById("navButton");
-if(h==60) {
+var bh = b.offsetHeight;// alert(h+"<"+bh+"+"+"30");
+if(h==70 || h<=bh+32) {
   n.style.height = "auto";
   n.style.width = "auto";
   n.style.backgroundColor = "#e1e1e1";
@@ -405,12 +410,24 @@ if(h==60) {
   makeNavScrollable();
 }
 else {
-  n.style.height = "60px";
-  n.style.width = "60px";
+  n.style.height = bh+32+"px";
+  n.style.width = "70px";
   n.style.overflow = "hidden";
   n.style.backgroundColor = "#ffffff00";
   b.innerHTML = "&#9776;";
 }
+}
+
+function closeNav(){
+var n = document.getElementById("navigation");
+var h = n.offsetHeight;
+if(h==70) return false;
+n.style.height = "70px";
+n.style.width = "70px";
+n.style.overflow = "hidden";
+n.style.backgroundColor = "#ffffff00";
+document.getElementById("navButton").innerHTML = "&#9776;";
+return true;
 }
 
 function makeNavScrollable(){
@@ -422,7 +439,7 @@ if(wh<486){
   n.style.height = wh+"px";
   n.style.overflowY = "scroll";
 }
-else if(n.offsetHeight>60) n.style.overflowY = "auto";
+else if(n.offsetHeight>70) n.style.overflowY = "auto";
 }
 
 function toggleDarkMode(){
@@ -454,6 +471,24 @@ var r = document.createRange();
 r.selectNodeContents(document.getElementById("all_page"));
 s.removeAllRanges();
 if(!l) s.addRange(r);
+}
+
+function navClicked(ev){ ev.stopPropagation(); }
+
+function decreaseFont(){
+var s = document.body.style;
+var fs = parseInt(s.fontSize);
+if(fs>8) fs--;
+s.fontSize = fs + "pt";
+cookie_set("fontSize", s.fontSize );
+}
+
+function increaseFont(){
+var s = document.body.style;
+var fs = parseInt(s.fontSize);
+if(fs<25)fs++;
+s.fontSize = fs + "pt";
+cookie_set("fontSize", s.fontSize );
 }
 
 </script>
