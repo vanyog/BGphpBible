@@ -55,8 +55,9 @@ pagehead(); // Изпращане <HEAD>...</HEAD> частта на стран�
 
 if(!$sreader){
 
-echo '<nav id="navigation" onclick="navClicked(event)"><p>
-<button id="navButton" onclick="toggleNav(event)">&#9776;</button></p>
+echo '<nav id="navigation" onclick="navClicked(event)"><p class="f">
+<button id="navButton" onclick="toggleNav(event)">&#9776;</button>
+<input type="range" id="contrast" oninput="contrastInput()" onchange="contrastChanged()" min="140" max="255"></p>
 <form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
 ';
@@ -379,14 +380,19 @@ function correctTop(){
 window.addEventListener("resize",setPaddingTop);
 setPaddingTop();
 setTimeout(function(){
-var s = document.body.style;
-if(darkMode==0) s.filter=\'invert(0%)\';
-else s.filter=\'invert(100%)\';
-var fs = cookie_value("fontSize", "14pt");
-s.fontSize = fs;
-},50);
+  var s = document.body.style;
+  var h1 = document.getElementById("h1");
+  h1.style.top = "0";
+  var v = cookie_value("contrast", 0);
+  setContrast(v);
+  document.getElementById("contrast").value = v;
+  var fs = cookie_value("fontSize", "14pt");
+  s.fontSize = fs;
+  if(darkMode==0) s.filter=\'invert(0%)\';
+  else s.sfilter=\'invert(100%)\';
+  },50);
 if(location.hash)setTimeout(function(){
-  var h = document.getElementById("h1").offsetHeight;
+  var h = h1.offsetHeight;
   var t = document.getElementById(location.hash.substring(1)).offsetTop;
   window.scrollTo(0, t - h);
 }, 500);
@@ -394,6 +400,29 @@ else{
   var bscrollY = cookie_value("bscrollY");
   window.scrollTo(0, bscrollY);
 }
+}
+
+function setContrast(v){
+  var rb = "rgb("+v+","+v+","+v+")";
+  var rc = "rgb("+(265-v)+","+(265-v)+","+(265-v)+")";
+  var s1 = document.getElementById("h1").style;
+  var s2 = document.getElementById("all_page").style;
+  var s3 = document.getElementById("mbtns").style;
+//  if(darkMode==0){
+    s1.backgroundColor =  rb;
+    s1.color = rc;
+    s2.backgroundColor =  rb;
+    s2.color = rc;
+    s3.backgroundColor =  rb;
+    s2.color = rc;
+//    document.body.style.filter=\'invert(0%)\';
+//  }
+//  else
+//  {
+//    document.getElementById("h1").style.color = r;
+//    document.getElementById("all_page").style.color = r;
+//    document.body.style.filter=\'invert(100%)\';
+//  }
 }
 
 function toggleNav(ev){
@@ -405,11 +434,13 @@ var bh = b.offsetHeight;// alert(h+"<"+bh+"+"+"30");
 if(h==70 || h<=bh+32) {
   n.style.height = "auto";
   n.style.width = "auto";
+  n.overflowY = "scroll";
   n.style.backgroundColor = "#e1e1e1";
   b.innerHTML = "&nbsp;x&nbsp;";
   makeNavScrollable();
 }
 else {
+  n.scroll(0,0);
   n.style.height = bh+32+"px";
   n.style.width = "70px";
   n.style.overflow = "hidden";
@@ -435,7 +466,7 @@ var n = document.getElementById("navigation");
 if(!n) return;
 var wh = window.innerHeight;
 var nh = n.clientHeight;
-if(wh<486){
+if(wh<nh){
   n.style.height = wh+"px";
   n.style.overflowY = "scroll";
 }
@@ -489,6 +520,15 @@ var fs = parseInt(s.fontSize);
 if(fs<25)fs++;
 s.fontSize = fs + "pt";
 cookie_set("fontSize", s.fontSize );
+}
+
+function contrastInput(){
+var v = document.getElementById("contrast").value;
+setContrast(v);
+}
+
+function contrastChanged(){
+cookie_set("contrast", document.getElementById("contrast").value)
 }
 
 </script>

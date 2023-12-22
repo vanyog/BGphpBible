@@ -12,10 +12,12 @@ input, input[type=button], input[type=submit], select, button, nav a
   padding:2px 5px; margin-left:20px; color:black; background-color:#dbdbdb; white-space:nowrap;
 }
 #navButton { margin-left:0; }
+#contrast { float:left; }
 
-nav { position:absolute; right:0; top:0; text-align:right; z-index:1; width:70px; height:70px; 
-overflow: hidden; max-width:100%; max-height:100vh; }
-nav p { margin:15px; line-height:2.2em; overflow-y:auto; overflow-x:hidden; }
+nav { position:absolute; top:0; right:0; text-align:right; z-index:1; width:70px; height:70px; 
+max-width:100%; max-height:100vh; overflow: hidden; }
+nav p { margin:15px; line-height:2.2em; }
+nav p.f { line-height:46px; }
 nav label { white-space:nowrap; }
 nav input[type=text] { width: 445px; max-width:calc(100% - 32px); background-color:#ffffff; }
 nav select:hover, nav a:hover, nav button:hover, nav input[type=submit]:hover 
@@ -23,7 +25,7 @@ nav select:hover, nav a:hover, nav button:hover, nav input[type=submit]:hover
   border-radius:5px; padding:2px 5px; text-decoration:none; 
 }
 
-h1 { position:absolute; top:0; max-width:770px; width:calc( 100% - 70px ); font-size:120%; 
+h1 { position:absolute; top:0; max-width:770px; width:calc( 100% - 80px ); font-size:120%; 
      margin-top:0; padding:10px; padding-right:70px; background-color:#ffffff; }
 h1 span { white-space:nowrap; }
 
