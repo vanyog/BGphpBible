@@ -9,7 +9,7 @@ body { font-family:-apple-system, Sans-Serif; font-size:14pt; background-color:#
 form, input, select, button { font-size:inherit;}
 input, input[type=button], input[type=submit], select, button, nav a
 { border-style:solid; border-width:1px; border-color:#8f8f9d; border-radius:5px;
-  padding:2px 5px; margin-left:20px; color:black; background-color:#dbdbdb; white-space:nowrap;
+  padding:2px 5px; margin-left:20px; color:black; background-color:inherited/*#dbdbdb*/; white-space:nowrap;
 }
 #navButton { margin-left:0; }
 #contrast { float:left; }
