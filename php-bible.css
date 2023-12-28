@@ -9,10 +9,10 @@ body { font-family:-apple-system, Sans-Serif; font-size:14pt; background-color:#
 form, input, select, button { font-size:inherit;}
 input, input[type=button], input[type=submit], select, button, nav a
 { border-style:solid; border-width:1px; border-color:#8f8f9d; border-radius:5px;
-  padding:2px 5px; margin-left:20px; color:black; background-color:inherited/*#dbdbdb*/; white-space:nowrap;
+  padding:2px 5px; margin-left:20px; color:black; background-color:inherit/*#dbdbdb*/; white-space:nowrap;
 }
 #navButton { margin-left:0; }
-#contrast { float:left; }
+#contrast { vertical-align: middle; }
 
 nav { position:absolute; top:0; right:0; text-align:right; z-index:1; width:70px; height:70px; 
 max-width:100%; max-height:100vh; overflow: hidden; }
@@ -39,6 +39,7 @@ span.note { color:green; }
 .bottom { padding:5px; padding-bottom: 20px; background-color:#ffffff; }
 .bottom input { font-size:100%; max-width:initial; }
 .button { font-size:75%; }
+#mbtns { font-size:75%; }
 form[name=b_parallel], form[name=b_open], form[name=f1] { padding:0; }
 form[name=showv] { background-color:#ffffff; display:inline-block; }
 
@@ -48,7 +49,7 @@ p { margin:0 10pt; }
 p.sr { margin:0 10pt 10pt 10pt; }
 p.bigpar { text-indent:2em; margin-bottom:0.5em; }
 
-a { text-decoration:none; }
+a { text-decoration:none; font-style:italic; }
 a:hover { text-decoration:underline; }
 
 .content {

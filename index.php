@@ -57,7 +57,9 @@ if(!$sreader){
 
 echo '<nav id="navigation" onclick="navClicked(event)"><p class="f">
 <button id="navButton" onclick="toggleNav(event)">&#9776;</button>
-<input type="range" id="contrast" oninput="contrastInput()" onchange="contrastChanged()" min="140" max="255"></p>
+<span style="float:left;"><label for="contrast">'.$word_contrast.'</label> 
+<input type="range" id="contrast" oninput="contrastInput()" onchange="contrastChanged()" min="140" max="255">
+<span></p>
 <form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
 ';
@@ -344,7 +346,7 @@ var max_sh = 0;
 var isDblClick = true;
 function page_move(ev){
     if(isDblClick) return;
-    var bb = document.getElementById("mbtns");
+//    var bb = document.getElementById("mbtns");
     var ch = ev.pageY;
 //    if(bb && (ch>bb.offsetTop)) chapter_change(sh);
     var dh = document.body.clientHeight;
@@ -410,13 +412,13 @@ function setContrast(v){
   rgbC = "rgb("+(256-v)+","+(256-v)+","+(256-v)+")";
   var s1 = document.getElementById("h1").style;
   var s2 = document.getElementById("all_page").style;
-  var s3 = document.getElementById("mbtns").style;
+  var s3 = document.getElementById("mbtns"); if(s3) s3 = s3.style;
   var s4 = document.getElementById("navigation").style;
   s1.backgroundColor =  rgbB;
   s1.color = rgbC;
   s2.backgroundColor =  rgbB;
   s2.color = rgbC;
-  s3.backgroundColor =  rgbB;
+  if(s3) s3.backgroundColor =  rgbB;
   if(document.getElementById("navigation").offsetHeight<=70) s4.backgroundColor = "#ffffff00";
   else s4.backgroundColor =  rgbB;
   s4.color = rgbC;
