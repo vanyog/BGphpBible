@@ -51,6 +51,9 @@ if (isset($_SERVER['QUERY_STRING'])) get_query();
 
 header("Content-Type: text/html; charset=utf-8");
 
+// Осигурява zip компресиране на отговора
+if(!ob_start("ob_gzhandler")) ob_start();
+
 pagehead(); // Изпращане <HEAD>...</HEAD> частта на страницата
 
 if(!$sreader){
@@ -236,7 +239,8 @@ if( ($bk<count($vcount)) && ($ch==(count($vcount[$bk])-1))  ){
 }
 
 function pagehead(){
-global $on_other_sites, $version, $pth, $bk, $ch, $vr, $vcount, $nxbk, $nxch, $prbk, $prch, $cookie_message, $image;
+global $on_other_sites, $version, $pth, $bk, $ch, $vr, $vcount, $nxbk, $nxch, $prbk, $prch, 
+       $cookie_message, $image;
 determinenextandprev();
 echo '<!DOCTYPE html>
 <html lang="bg">
@@ -249,6 +253,8 @@ echo '<!DOCTYPE html>
   <meta property="og:image" content="http://vanyog.com/bible/php/';
 if(isset($image[$pth])) echo $pth.$image[$pth];
 else echo 'images/chetveroevangelie.jpg';
+$js  = file_get_contents($_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/js/cookies.js");
+$css = file_get_contents($_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/php-bible.css");
 echo '">
   <meta property="og:title" content="'.$version[$pth].' - проект BGphpBible">
   <meta property="og:description" content="Библията; търсене в Библията; php скриптове с отворен код за представяне на Библията върху отдалечен или локален сървър.">
@@ -256,8 +262,10 @@ echo '">
   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
   <META name="keywords" content="Библия,Библията,търсене,онлайн,преводи на български,руски,английски,македонски,сръбски">
   <META name="description" content="Библията на български и други езици; търсене в Библията; php скриптове с отворен код за представяне на Библията върху отдалечен или локален сървър.">
-  <link rel=stylesheet type="text/CSS" href="php-bible.css">
-  <script src="js/cookies.js"></script>
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#ffffff">
+  <style>'.$css.'</style>
+  <script>'."\n".$js.'</script>
 
 <script>
 var cookie_message = "'.$cookie_message.'";
@@ -532,6 +540,8 @@ setContrast(v);
 function contrastChanged(){
 cookie_set("contrast", document.getElementById("contrast").value)
 }
+
+let FF_FOUC_FIX;
 
 </script>
 
