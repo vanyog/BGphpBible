@@ -113,7 +113,7 @@ echo '<p>'.prev_chapter_link().' &nbsp;
 <p>
 <button title="'.$decrease_font.'" onclick="decreaseFont();">A<sup>-</sup></button>
 <button title="'.$increase_font.'" onclick="increaseFont();">A<sup>+</sup></button>
-<button title="'.$dark_mode.'" onclick="toggleDarkMode();">&#x1F317;</button>
+<button title="'.$dark_mode.'" onclick="toggleDarkMode();" id="modeBtn">&#x1F317;</button>
 <button title="'.$full_reload.'" onclick="document.location.reload(true);">&#8635;</button>
 '.about_version().'</p>
 </nav>
@@ -339,6 +339,7 @@ echo 'document.b_open.action="index.php";
 document.b_open.submit();
 }
 
+// Отваря сравняването на стихове при кликване върху номер на стих
 function parallel(v,i){
 document.b_parallel.verse.value=v+1
 document.b_parallel.index.value=i
@@ -348,22 +349,23 @@ document.b_parallel.submit();
 cookie_set("version","'.$pth.'");
 cookie_set("book","'.$bk.'");
 cookie_set("chapter","'.$ch.'");
-//cookie_set("verse","'.$vr.'");
 
 var max_sh = 0;
 var isDblClick = true;
+
+// Превъртане на страницата
 function page_move(ev){
     if(isDblClick) return;
-//    var bb = document.getElementById("mbtns");
     var ch = ev.pageY;
-//    if(bb && (ch>bb.offsetTop)) chapter_change(sh);
     var dh = document.body.clientHeight;
     var wh = window.innerHeight;
     var sh = window.scrollY;
     if(sh>max_sh) max_sh = sh;
     var dd = document.getElementById("h1");
     dd = dd.offsetHeight + 10;
+    // Кликване в горната четвърт на екрана - движение нагоре
     if(ch-sh<wh/4) window.scrollTo(0, sh - wh + dd);
+    // Кликване в долната четвърт на екрана - движение наадолу
     if(ch-sh>wh*3/4) window.scrollTo(0, sh + wh - dd);
 }
 
@@ -373,19 +375,22 @@ function chapter_change(sh){
     if(max_sh>0 && sh1==0 && sh1==sh) goprev();
 }
 
-var to_anchor = false; // Флаг, който е вдиганаат от щракване върху линк към бележка под линия
+var to_anchor = false; // Флаг, който се вдигана при щракване върху линк към бележка под линия
+// Изпълнява се при кликване някъде върху текста на страницата
 function page_clicked(ev){
 isDblClick = false;
 if(!to_anchor && !closeNav()) setTimeout(page_move,300,ev);
 to_anchor = false;
 }
 
+// Изпълнява се при двойно кликване някъде върху текста на страницата - само вдига флаг isDblClick
 function page_dblclicked(){
 isDblClick = true;
 }
 
 var darkMode = cookie_value("darkMode");
 
+// Изпълнява се при зареждане на страницата
 function correctTop(){
 window.addEventListener("resize",setPaddingTop);
 setPaddingTop();
@@ -393,13 +398,14 @@ setTimeout(function(){
   var s = document.body.style;
   var h1 = document.getElementById("h1");
   h1.style.top = "0";
-  var v = cookie_value("contrast", 0);
-  document.getElementById("contrast").value = v;
+  var v = cookie_value("contrast", 255);
+  var cs = document.getElementById("contrast");
+  if(cs) cs.value = v;
   var fs = cookie_value("fontSize", "14pt");
   s.fontSize = fs;
   setContrast(v);
-  if(darkMode==0) s.filter=\'invert(0%)\';
-  else s.filter=\'invert(100%)\';
+  if(darkMode==0){ s.filter=\'invert(0%)\'; document.getElementById("modeBtn").innerText = "Нощ"; }
+  else{ s.filter=\'invert(100%)\'; document.getElementById("modeBtn").innerText = "Ден"; }
   },50);
 if(location.hash)setTimeout(function(){
   var h = h1.offsetHeight;
@@ -421,15 +427,18 @@ function setContrast(v){
   var s1 = document.getElementById("h1").style;
   var s2 = document.getElementById("all_page").style;
   var s3 = document.getElementById("mbtns"); if(s3) s3 = s3.style;
-  var s4 = document.getElementById("navigation").style;
+  var nv = document.getElementById("navigation");
+  if(nv) var s4 = nv.style;
   s1.backgroundColor =  rgbB;
   s1.color = rgbC;
   s2.backgroundColor =  rgbB;
   s2.color = rgbC;
   if(s3) s3.backgroundColor =  rgbB;
-  if(document.getElementById("navigation").offsetHeight<=70) s4.backgroundColor = "#ffffff00";
-  else s4.backgroundColor =  rgbB;
-  s4.color = rgbC;
+  if(nv){
+     if(nv.offsetHeight<=70) s4.backgroundColor = "#ffffff00";
+     else s4.backgroundColor =  rgbB;
+     s4.color = rgbC;
+  }
 }
 
 function toggleNav(ev){
@@ -458,6 +467,7 @@ else {
 
 function closeNav(){
 var n = document.getElementById("navigation");
+if(!n) return;
 var h = n.offsetHeight;
 if(h==70) return false;
 n.style.height = "70px";
@@ -485,11 +495,23 @@ else if(n.offsetHeight>70){
 
 function toggleDarkMode(){
 var b = document.body;
-if(darkMode==0) { b.style.filter=\'invert(100%)\'; darkMode=1; cookie_set("darkMode",1); }
-else { b.style.filter=\'invert(0)\'; darkMode=0; cookie_set("darkMode",0); }
+var bt = document.getElementById("modeBtn");
+if(darkMode==0) {
+  b.style.filter=\'invert(100%)\';
+  darkMode=1;
+  cookie_set("darkMode",1);
+  bt.innerText = "Ден";
+}
+else {
+  b.style.filter=\'invert(0)\';
+  darkMode=0;
+  cookie_set("darkMode",0);
+  bt.innerText = "Нощ";
+}
 toggleNav(event);
 }
 
+// Вмъква празно пространство над текста, че в него да се помества заглавието
 function setPaddingTop(){
 makeNavScrollable();
 var h = document.getElementById("h1");
@@ -502,7 +524,7 @@ var h = window.scrollY;
 var h1 = document.getElementById("h1");
 var n = document.getElementById("navigation");
 h1.style.top = h+"px";
-n.style.top = h+"px";
+if(n) n.style.top = h+"px";
 }
 
 function selectAllText(){

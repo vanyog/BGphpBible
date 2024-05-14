@@ -11,12 +11,12 @@ input, input[type=button], input[type=submit], select, button, nav a
 { border-style:solid; border-width:1px; border-color:#8f8f9d; border-radius:5px;
   padding:2px 5px; margin-left:20px; color:black; background-color:inherit/*#dbdbdb*/; white-space:nowrap;
 }
-#navButton { margin-left:0; }
+#navButton { margin-left:0; background-color:#ffffff; }
 #contrast { vertical-align: middle; }
 
 nav { position:absolute; top:0; right:0; text-align:right; z-index:1; width:70px; height:70px; 
 max-width:100%; max-height:100vh; overflow: hidden; }
-nav p { margin:15px; line-height:2.2em; }
+nav p { margin:15px; line-height:2.2em; overflow:auto; }
 nav p.f { line-height:46px; }
 nav label { white-space:nowrap; }
 nav input[type=text] { width: 445px; max-width:calc(100% - 32px); background-color:#ffffff; }
@@ -108,4 +108,4 @@ border:solid 1px #cecece;}
 .right { float:right; }
 .left { float:left; }
 
-#sallb { float:right; }
+#sallb { float:right; position:relative; z-index:1 }

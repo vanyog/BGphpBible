@@ -17,9 +17,10 @@ else
 function about_version(){
 global $apth,$pth,$about_version;
  $alk=$apth.'about.html';
- $lk=$pth.'about.html';
- if (file_exists($alk))
-  return '<a href="'.$lk.'" id="about_link">'.$about_version.'</a>';
+ if (file_exists($alk)){
+   $lk = "about_version.php?ver=$pth";
+   return '<a href="'.$lk.'" id="about_link">'.$about_version.'</a>';
+ }
  else
   return '&nbsp;';
 }
@@ -27,7 +28,7 @@ global $apth,$pth,$about_version;
 function about_the_project(){
 global $word_project,$maintained_by,$and_hosted_at;
 return '<span class="panel">'.$word_project.'
-<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.3.5</a>,</b>
+<b><a href="http://vanyog.com/bible/php/about.html">BGphpBible 2.3.6</a>,</b>
  '.$maintained_by.': 
 <b><a href="http://vanyog.com">vanyog.com</a></b>.
 </span>';
