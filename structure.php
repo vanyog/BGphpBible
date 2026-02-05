@@ -7,6 +7,7 @@ if (file_exists($pth.'BibleTitles.txt')){
  $bn=explode(' ',trim($bnames[0]));    // Брой на книгите в Библията
  $vcount=get_structure($bn,$pth);      // Масив, описващ структурата на Библията
 }
+else die('File '.$pth.'BibleTitles.txt'.' NOT EXIST');
 
 function get_structure($bn,$pth){ // Чете масива, описващ структурата на Библията
 $bstruct=file($pth.'BibleStructure.csv'); 

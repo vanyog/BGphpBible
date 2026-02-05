@@ -62,7 +62,7 @@ echo '<nav id="navigation" onclick="navClicked(event)"><p class="f">
 <button id="navButton" onclick="toggleNav(event)">&#9776;</button>
 <span style="float:left;"><label for="contrast">'.$word_contrast.'</label> 
 <input type="range" id="contrast" oninput="contrastInput()" onchange="contrastChanged()" min="140" max="255">
-<span></p>
+</span></p>
 <form name="b_open" action="index.php" method="'.$form_metod.'">
 <input type="hidden" name="cversion" value="'.$pth.'">
 ';
@@ -126,7 +126,7 @@ if($sreader) echo '<button onclick="selectAllText();" id="sallb">Select</button>
 echo '<div id="all_page">
 ';
 
-// Показване на заглавието на текста
+// Съставяне и показване на заглавието на текста
 if ( is_array($bn) && (count($bn)>21) ){
  $h1 = '';
  if ( ($bk<count($bn)) && ($bn[$bk]==22) ){ $h1 = "$word_psalm &nbsp;$ch"; }
@@ -310,7 +310,7 @@ function bookchange(){
 
 var no_move = false;
 
-// Отваряне на по-следваща глава
+// Отваряне на следваща глава
 function gonext(){
 cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($nxbk-1).'";
@@ -319,7 +319,7 @@ document.b_open.chapter.selectedIndex='.($nxch-1).';
 document.b_open.submit();
 }
 
-// Отваряне на по-предна глава
+// Отваряне на предна глава
 function goprev(){
 cookie_set("bscrollY",0);
 document.b_open.book.selectedIndex="'.($prbk-1).'";
@@ -396,8 +396,6 @@ window.addEventListener("resize",setPaddingTop);
 setPaddingTop();
 setTimeout(function(){
   var s = document.body.style;
-  var h1 = document.getElementById("h1");
-  h1.style.top = "0";
   var v = cookie_value("contrast", 255);
   var cs = document.getElementById("contrast");
   if(cs) cs.value = v;
@@ -407,7 +405,8 @@ setTimeout(function(){
   if(darkMode==0){ s.filter=\'invert(0%)\'; document.getElementById("modeBtn").innerText = "Нощ"; }
   else{ s.filter=\'invert(100%)\'; document.getElementById("modeBtn").innerText = "Ден"; }
   },50);
-if(location.hash)setTimeout(function(){
+if(location.hash) setTimeout(function(){
+  var h1 = document.getElementById("h1");
   var h = h1.offsetHeight;
   var t = document.getElementById(location.hash.substring(1)).offsetTop;
   window.scrollTo(0, t - h);
@@ -514,16 +513,18 @@ toggleNav(event);
 // Вмъква празно пространство над текста, че в него да се помества заглавието
 function setPaddingTop(){
 makeNavScrollable();
-var h = document.getElementById("h1");
-var ap = document.getElementById("all_page");
-ap.style.paddingTop = h.offsetHeight + 18 + "px";
+//var h = document.getElementById("h1");
+//var ap = document.getElementById("all_page");
+//ap.style.paddingTop = h.offsetHeight + 18 + "px";
 }
 
+// Изпълнява се при скролване на страницата
 function onBodyScroll(){
 var h = window.scrollY;
-var h1 = document.getElementById("h1");
+cookie_set("bscrollY",h);
+//var h1 = document.getElementById("h1");
+//h1.style.top = h+"px";
 var n = document.getElementById("navigation");
-h1.style.top = h+"px";
 if(n) n.style.top = h+"px";
 }
 
