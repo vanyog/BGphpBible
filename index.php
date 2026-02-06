@@ -440,21 +440,23 @@ function setContrast(v){
   }
 }
 
+// Превключва навигацията от сгънато в отворено състояние и обратно
+// Изпълнява се при кликване върху бутона
 function toggleNav(ev){
 ev.stopPropagation();
 var n = document.getElementById("navigation");
 var h = n.offsetHeight;
 var b = document.getElementById("navButton");
-var bh = b.offsetHeight;// alert(h+"<"+bh+"+"+"32");
-if(h==70 || h<=bh+32) {
+var bh = b.offsetHeight;
+if(h==70 || h<=bh+32) { // разгъване
   n.style.height = "auto";
-  n.style.width = "auto";
+  n.style.width = "fit-content";
   n.overflowY = "scroll";
   n.style.backgroundColor = rgbB;
   b.innerHTML = "&nbsp;x&nbsp;";
   makeNavScrollable();
 }
-else {
+else { // сгъване
   n.scroll(0,0);
   n.style.height = bh+32+"px";
   n.style.width = "70px";
@@ -464,6 +466,7 @@ else {
 }
 }
 
+// Сгъва навигацията до размерите на бутон
 function closeNav(){
 var n = document.getElementById("navigation");
 if(!n) return;
@@ -477,6 +480,7 @@ document.getElementById("navButton").innerHTML = "&#9776;";
 return true;
 }
 
+// Наглася височината на навигацията, ако е по-висока от екрана 
 function makeNavScrollable(){
 var n = document.getElementById("navigation");
 if(!n) return;
@@ -492,6 +496,7 @@ else if(n.offsetHeight>70){
 }
 }
 
+// Превключване от "Ден"-светъл режим към "Нощ"-тъмен и обратно
 function toggleDarkMode(){
 var b = document.body;
 var bt = document.getElementById("modeBtn");
@@ -524,8 +529,8 @@ var h = window.scrollY;
 cookie_set("bscrollY",h);
 //var h1 = document.getElementById("h1");
 //h1.style.top = h+"px";
-var n = document.getElementById("navigation");
-if(n) n.style.top = h+"px";
+//var n = document.getElementById("navigation");
+//if(n) n.style.top = h+"px";
 }
 
 function selectAllText(){
