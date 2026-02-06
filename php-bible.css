@@ -109,5 +109,5 @@ border:solid 1px #cecece;}
 
 #sallb { float:right; position:relative; z-index:1 }
 
-#fndisplay { display:none; position:fixed; top:220px; left:200px; background-color:white; 
- padding:0.25em; }
+#fndisplay { display:none; position:fixed; background-color:white; border-radius:5px;
+ padding:0.5em; box-shadow: 0px 0px 6px 0px; margin:6px; }

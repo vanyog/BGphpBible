@@ -123,7 +123,7 @@ echo '<p>'.prev_chapter_link().' &nbsp;
 
 if($sreader) echo '<button onclick="selectAllText();" id="sallb">Select</button>'."\n";
 
-echo '<div id="all_page">
+echo '<div id="all_page" role="main">
 ';
 
 // Съставяне и показване на заглавието на текста
@@ -578,7 +578,9 @@ d.innerHTML = e.innerHTML;
 d.firstElementChild.remove();
 d.style.display = "block";
 d.style.top = (window.scrollY + r1.top) + "px";
-d.style.left = (r1.left - d.getBoundingClientRect().width/2) + "px";
+var lf = r1.left - d.getBoundingClientRect().width/2;
+if(lf<0) lf = 0;
+d.style.left = lf + "px";
 }
 
 // Изпълнява се, когато курсорът напуска номер на бележка под линия
