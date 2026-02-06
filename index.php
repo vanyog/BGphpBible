@@ -375,7 +375,7 @@ function chapter_change(sh){
     if(max_sh>0 && sh1==0 && sh1==sh) goprev();
 }
 
-var to_anchor = false; // Флаг, който се вдигана при щракване върху линк към бележка под линия
+var to_anchor = false; // Флаг, който се вдига при щракване върху линк към бележка под линия
 // Изпълнява се при кликване някъде върху текста на страницата
 function page_clicked(ev){
 isDblClick = false;
@@ -569,6 +569,23 @@ function contrastChanged(){
 cookie_set("contrast", document.getElementById("contrast").value)
 }
 
+// Изпълнява се, когато курсорът минава върху номер на бележка под линия
+function fnmOver(l,a){
+var e = document.getElementById("nt" + a);
+var d = document.getElementById("fndisplay");
+var r1 = l.getBoundingClientRect(); 
+d.innerHTML = e.innerHTML;
+d.firstElementChild.remove();
+d.style.display = "block";
+d.style.top = (window.scrollY + r1.top) + "px";
+d.style.left = (r1.left - d.getBoundingClientRect().width/2) + "px";
+}
+
+// Изпълнява се, когато курсорът напуска номер на бележка под линия
+function fnmOut(){
+document.getElementById("fndisplay").style.display="none";
+}
+
 let FF_FOUC_FIX;
 
 </script>
@@ -610,5 +627,6 @@ return $r;
 
 ?>
 </div>
+<div id="fndisplay" onmouseleave="fnmOut();"></div>
 </body>
 </html>

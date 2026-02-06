@@ -5,7 +5,7 @@ include("functions-$language.php");
 $fnotes = ''; // Бележки под линию
 $input_data=array(); // масив за входни данни
 check_for_get_data(); // установяване на входните данни, ако са изпратени с GET метод
-$last_bk=1; // Последната разпизната в препратка книга. 
+$last_bk=1; // Последната посочена в препратка книга. 
 
 function a_path($p){
 if (strpos($_SERVER['SERVER_SOFTWARE'],'(Win32)'))
@@ -89,7 +89,6 @@ else
 }
 
 // Четене на стих
-
 function read_verse($enc,$pf,$tf,$vi){
 $vt='';
 $vp=read_vpos($pf,$vi);
@@ -109,14 +108,18 @@ $vt=preg_replace_callback('/\s*\{(.*?)\}[0-9\*]*/', 'replace_notes', $vt);
 return make_format($vt);
 }
 
+// Замества препратките/бележките, с номер на бележда под линия
 function replace_notes($a){
 global $findex, $fnotes, $enc, $sreader;
 if($sreader) return '';
+// Превръща припратките в линкове 
 $a[1] = make_links($a[1]);
 $findex++;
-$fnotes.="\n".'<p><span class="fnotes"><sup>'.$findex.'</sup></span> '.
-         iconv($enc,'utf-8//IGNORE',make_format($a[1]));
-return '<a href="#fnotes" class="fnotes" onclick="to_anchor = true;"><sup>'.$findex.'</sup></a>';
+$fn = iconv($enc,'utf-8//IGNORE',make_format($a[1]));
+$fnotes.="\n".'<p id="nt'.$findex.'"><span class="fnotes"><sup>'.$findex.'</sup></span> '.$fn;
+return '<a href="#nt'.$findex.'" class="fnotes" onclick="to_anchor = true;" '.
+       'onmouseenter="fnmOver(this,'.$findex.');"><sup>'.
+       $findex.'</sup></a>';
 }
 
 function make_links($a){
@@ -144,6 +147,7 @@ $last_bk = $bk;
 return "<a href=\"$lk\">$p</a>";
 }
 
+// Променя прилаганото във файлавете обозначаване на препратките с { } и на текста с курсив с ||
 function make_format($vt){
 $vt = preg_replace('/(\{.*?\})/', '<span class="note">${1}</span>', $vt);
 return preg_replace('/\|(.*?)\|/', '<i>${1}</i>', $vt);
